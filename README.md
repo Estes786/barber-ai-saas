@@ -12,10 +12,18 @@ Transform your barbershop business with cutting-edge AI technology featuring vir
 
 **Primary Deployments:**
 - **🔷 Vercel (Fixed!):** [https://barber-ai-saas.vercel.app](https://barber-ai-saas.vercel.app)
-- **🟠 Cloudflare Pages (Coming Soon):** TBD
-- **🧪 Sandbox Testing:** [https://3000-itecag7r6dtjhhdj2rg3t-583b4d74.sandbox.novita.ai](https://3000-itecag7r6dtjhhdj2rg3t-583b4d74.sandbox.novita.ai)
+- **🟠 Cloudflare Pages (Ready to Deploy!):** Setup guide available in `CLOUDFLARE_SETUP_GUIDE.md`
+- **🧪 Sandbox Testing:** [https://3000-i9tgzvt7yr2dcokhyzbiq-82b888ba.sandbox.novita.ai](https://3000-i9tgzvt7yr2dcokhyzbiq-82b888ba.sandbox.novita.ai)
 
 **📱 GitHub Repository:** [https://github.com/Estes786/barber-ai-saas](https://github.com/Estes786/barber-ai-saas)
+
+### ✅ Recent Updates (2026-01-13)
+- **Fixed:** Vercel 404 routing issues - Updated `vercel.json` for proper Hono integration
+- **Fixed:** Cloudflare Pages deployment errors - Package.json commands corrected
+- **Added:** Comprehensive Cloudflare setup guide (`CLOUDFLARE_SETUP_GUIDE.md`)
+- **Added:** Environment variables configuration (`.dev.vars`)
+- **Status:** ✅ Backend ready for production deployment
+- **Next:** Phase 3 implementation (Authentication, Dashboard, Payment, Notifications)
 
 ### 🎮 Try Phase 2 Features:
 - **AI Virtual Try-On:** `/demo/try-on`
