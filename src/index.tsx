@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { serveStatic } from 'hono/cloudflare-workers'
 import type { CloudflareBindings } from './types'
+import apiRoutes from './routes/api'
 
 const app = new Hono<{ Bindings: CloudflareBindings }>()
 
@@ -10,6 +11,9 @@ app.use('/api/*', cors())
 
 // Serve static files
 app.use('/static/*', serveStatic({ root: './public' }))
+
+// Mount Phase 2 API routes (Supabase-powered)
+app.route('/api', apiRoutes)
 
 // API Routes - Barbershops
 app.get('/api/barbershops', async (c) => {
@@ -110,6 +114,509 @@ app.get('/api/stats', async (c) => {
   })
 })
 
+// ========== PHASE 2 DEMO PAGES ==========
+
+// AI Virtual Try-On Demo Page
+app.get('/demo/try-on', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>AI Virtual Try-On Demo - Barber AI SaaS</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-50">
+        <nav class="bg-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 py-4">
+                <div class="flex justify-between items-center">
+                    <a href="/" class="flex items-center">
+                        <i class="fas fa-scissors text-2xl text-purple-600 mr-2"></i>
+                        <span class="text-xl font-bold">Barber AI SaaS</span>
+                    </a>
+                    <a href="/" class="text-purple-600 hover:text-purple-700">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                    <i class="fas fa-wand-magic-sparkles text-purple-600 mr-3"></i>
+                    AI Virtual Try-On Demo
+                </h1>
+                <p class="text-xl text-gray-600">
+                    Upload your photo and try different hairstyles instantly with AI
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Upload Section -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                        <i class="fas fa-upload text-purple-600 mr-2"></i>
+                        Upload Your Photo
+                    </h2>
+                    
+                    <div id="upload-zone" class="border-4 border-dashed border-gray-300 rounded-xl p-12 text-center cursor-pointer hover:border-purple-500 transition">
+                        <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
+                        <p class="text-lg text-gray-600 mb-2">Click to upload or drag and drop</p>
+                        <p class="text-sm text-gray-500">PNG, JPG up to 10MB</p>
+                        <input type="file" id="photo-upload" class="hidden" accept="image/*">
+                    </div>
+
+                    <div id="uploaded-photo" class="hidden mt-6">
+                        <img id="photo-preview" class="w-full rounded-xl shadow-lg" alt="Uploaded photo">
+                        <div id="face-shape-result" class="mt-4 p-4 bg-purple-50 rounded-lg hidden">
+                            <p class="text-sm font-semibold text-purple-900">Detected Face Shape:</p>
+                            <p class="text-2xl font-bold text-purple-600" id="face-shape-text"></p>
+                            <p class="text-sm text-gray-600 mt-2">Confidence: <span id="face-confidence"></span>%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hairstyle Selection -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                        <i class="fas fa-palette text-purple-600 mr-2"></i>
+                        Choose Hairstyle
+                    </h2>
+                    
+                    <div id="hairstyle-grid" class="grid grid-cols-2 gap-4">
+                        <button class="hairstyle-btn p-4 border-2 border-gray-300 rounded-xl hover:border-purple-600 transition" data-style="fade">
+                            <i class="fas fa-cut text-3xl text-purple-600 mb-2"></i>
+                            <p class="font-semibold">Fade</p>
+                        </button>
+                        <button class="hairstyle-btn p-4 border-2 border-gray-300 rounded-xl hover:border-purple-600 transition" data-style="undercut">
+                            <i class="fas fa-cut text-3xl text-indigo-600 mb-2"></i>
+                            <p class="font-semibold">Undercut</p>
+                        </button>
+                        <button class="hairstyle-btn p-4 border-2 border-gray-300 rounded-xl hover:border-purple-600 transition" data-style="pompadour">
+                            <i class="fas fa-cut text-3xl text-blue-600 mb-2"></i>
+                            <p class="font-semibold">Pompadour</p>
+                        </button>
+                        <button class="hairstyle-btn p-4 border-2 border-gray-300 rounded-xl hover:border-purple-600 transition" data-style="buzz">
+                            <i class="fas fa-cut text-3xl text-green-600 mb-2"></i>
+                            <p class="font-semibold">Buzz Cut</p>
+                        </button>
+                        <button class="hairstyle-btn p-4 border-2 border-gray-300 rounded-xl hover:border-purple-600 transition" data-style="crew">
+                            <i class="fas fa-cut text-3xl text-pink-600 mb-2"></i>
+                            <p class="font-semibold">Crew Cut</p>
+                        </button>
+                        <button class="hairstyle-btn p-4 border-2 border-gray-300 rounded-xl hover:border-purple-600 transition" data-style="quiff">
+                            <i class="fas fa-cut text-3xl text-orange-600 mb-2"></i>
+                            <p class="font-semibold">Quiff</p>
+                        </button>
+                    </div>
+
+                    <div id="result-section" class="hidden mt-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Result</h3>
+                        <div id="loading" class="hidden text-center py-8">
+                            <i class="fas fa-spinner fa-spin text-4xl text-purple-600 mb-4"></i>
+                            <p class="text-gray-600">Generating your new look...</p>
+                        </div>
+                        <div id="result-image" class="hidden">
+                            <img id="try-on-result" class="w-full rounded-xl shadow-lg" alt="Try-on result">
+                            <button id="download-btn" class="w-full mt-4 bg-purple-600 text-white py-3 rounded-full font-semibold hover:bg-purple-700">
+                                <i class="fas fa-download mr-2"></i>Download Result
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+          let uploadedImage = null;
+          
+          // Upload zone click handler
+          document.getElementById('upload-zone').addEventListener('click', () => {
+            document.getElementById('photo-upload').click();
+          });
+
+          // Photo upload handler
+          document.getElementById('photo-upload').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+              uploadedImage = event.target.result;
+              document.getElementById('photo-preview').src = uploadedImage;
+              document.getElementById('uploaded-photo').classList.remove('hidden');
+              
+              // Detect face shape
+              try {
+                const response = await fetch('/api/tryon/upload', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ image: uploadedImage })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                  document.getElementById('face-shape-result').classList.remove('hidden');
+                  document.getElementById('face-shape-text').textContent = data.face_shape.toUpperCase();
+                  document.getElementById('face-confidence').textContent = (data.confidence * 100).toFixed(0);
+                }
+              } catch (error) {
+                console.error('Face detection error:', error);
+              }
+            };
+            reader.readAsDataURL(file);
+          });
+
+          // Hairstyle selection handler
+          document.querySelectorAll('.hairstyle-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+              if (!uploadedImage) {
+                alert('Please upload a photo first!');
+                return;
+              }
+
+              const hairstyle = btn.dataset.style;
+              document.getElementById('result-section').classList.remove('hidden');
+              document.getElementById('loading').classList.remove('hidden');
+              document.getElementById('result-image').classList.add('hidden');
+
+              try {
+                const response = await fetch('/api/tryon/generate', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ 
+                    image: uploadedImage,
+                    hairstyle_id: hairstyle
+                  })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                  document.getElementById('loading').classList.add('hidden');
+                  document.getElementById('result-image').classList.remove('hidden');
+                  document.getElementById('try-on-result').src = data.result_image;
+                } else {
+                  alert('Generation failed: ' + (data.error || 'Unknown error'));
+                }
+              } catch (error) {
+                alert('Error generating try-on result');
+                console.error(error);
+              }
+            });
+          });
+        </script>
+    </body>
+    </html>
+  `)
+})
+
+// Booking System Demo Page
+app.get('/demo/booking', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Smart Booking System - Barber AI SaaS</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-50">
+        <nav class="bg-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 py-4">
+                <div class="flex justify-between items-center">
+                    <a href="/" class="flex items-center">
+                        <i class="fas fa-scissors text-2xl text-purple-600 mr-2"></i>
+                        <span class="text-xl font-bold">Barber AI SaaS</span>
+                    </a>
+                    <a href="/" class="text-purple-600 hover:text-purple-700">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                    <i class="fas fa-calendar-check text-purple-600 mr-3"></i>
+                    Smart Booking System
+                </h1>
+                <p class="text-xl text-gray-600">
+                    Book your appointment in seconds with our AI-powered system
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Step 1: Select Service -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">
+                        <span class="bg-purple-600 text-white w-8 h-8 rounded-full inline-flex items-center justify-center mr-2">1</span>
+                        Select Service
+                    </h2>
+                    <div class="space-y-3">
+                        <div class="service-option p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-purple-600 transition">
+                            <p class="font-semibold">Haircut</p>
+                            <p class="text-sm text-gray-600">30 min • $25</p>
+                        </div>
+                        <div class="service-option p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-purple-600 transition">
+                            <p class="font-semibold">Haircut + Beard Trim</p>
+                            <p class="text-sm text-gray-600">45 min • $35</p>
+                        </div>
+                        <div class="service-option p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-purple-600 transition">
+                            <p class="font-semibold">Deluxe Package</p>
+                            <p class="text-sm text-gray-600">60 min • $50</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Choose Date & Time -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">
+                        <span class="bg-purple-600 text-white w-8 h-8 rounded-full inline-flex items-center justify-center mr-2">2</span>
+                        Pick Date & Time
+                    </h2>
+                    <input type="date" class="w-full p-3 border-2 border-gray-300 rounded-lg mb-4" id="date-picker">
+                    <div id="time-slots" class="grid grid-cols-3 gap-2 max-h-80 overflow-y-auto">
+                        <button class="time-slot p-2 border-2 border-gray-300 rounded-lg hover:border-purple-600 transition text-sm">09:00</button>
+                        <button class="time-slot p-2 border-2 border-gray-300 rounded-lg hover:border-purple-600 transition text-sm">09:30</button>
+                        <button class="time-slot p-2 border-2 border-gray-300 rounded-lg hover:border-purple-600 transition text-sm">10:00</button>
+                        <button class="time-slot p-2 border-2 border-gray-300 rounded-lg hover:border-purple-600 transition text-sm">10:30</button>
+                        <button class="time-slot p-2 border-2 border-gray-300 rounded-lg hover:border-purple-600 transition text-sm">11:00</button>
+                        <button class="time-slot p-2 border-2 border-gray-300 rounded-lg hover:border-purple-600 transition text-sm">11:30</button>
+                        <button class="time-slot p-2 border-2 border-gray-300 rounded-lg hover:border-purple-600 transition text-sm">14:00</button>
+                        <button class="time-slot p-2 border-2 border-gray-300 rounded-lg hover:border-purple-600 transition text-sm">14:30</button>
+                        <button class="time-slot p-2 border-2 border-gray-300 rounded-lg hover:border-purple-600 transition text-sm">15:00</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Contact Info -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">
+                        <span class="bg-purple-600 text-white w-8 h-8 rounded-full inline-flex items-center justify-center mr-2">3</span>
+                        Your Information
+                    </h2>
+                    <form id="booking-form" class="space-y-4">
+                        <input type="text" placeholder="Full Name" class="w-full p-3 border-2 border-gray-300 rounded-lg" required>
+                        <input type="email" placeholder="Email" class="w-full p-3 border-2 border-gray-300 rounded-lg" required>
+                        <input type="tel" placeholder="Phone Number" class="w-full p-3 border-2 border-gray-300 rounded-lg" required>
+                        <textarea placeholder="Special requests (optional)" class="w-full p-3 border-2 border-gray-300 rounded-lg h-24"></textarea>
+                        <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-full font-semibold hover:bg-purple-700">
+                            <i class="fas fa-check mr-2"></i>Confirm Booking
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+          // Set minimum date to today
+          const dateInput = document.getElementById('date-picker');
+          dateInput.min = new Date().toISOString().split('T')[0];
+          dateInput.value = dateInput.min;
+
+          // Form submission
+          document.getElementById('booking-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Booking confirmed! You will receive a confirmation email shortly.');
+          });
+        </script>
+    </body>
+    </html>
+  `)
+})
+
+// AI Chatbot Demo Page
+app.get('/demo/chat', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>AI Consultation Chatbot - Barber AI SaaS</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-50">
+        <nav class="bg-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 py-4">
+                <div class="flex justify-between items-center">
+                    <a href="/" class="flex items-center">
+                        <i class="fas fa-scissors text-2xl text-purple-600 mr-2"></i>
+                        <span class="text-xl font-bold">Barber AI SaaS</span>
+                    </a>
+                    <a href="/" class="text-purple-600 hover:text-purple-700">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="max-w-4xl mx-auto px-4 py-12">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                    <i class="fas fa-robot text-purple-600 mr-3"></i>
+                    AI Consultation Assistant
+                </h1>
+                <p class="text-xl text-gray-600">
+                    Get personalized hairstyle recommendations and hair care tips
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg">
+                <!-- Chat Header -->
+                <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 rounded-t-2xl">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-robot text-purple-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg">Barber AI Assistant</h3>
+                            <p class="text-sm opacity-90">Online • Always here to help</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Messages -->
+                <div id="chat-messages" class="p-6 h-96 overflow-y-auto space-y-4">
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                            <i class="fas fa-robot text-purple-600"></i>
+                        </div>
+                        <div class="bg-gray-100 rounded-2xl rounded-tl-none p-4 max-w-xs">
+                            <p class="text-gray-800">Hi! I'm your AI barber assistant. I can help you find the perfect hairstyle, provide hair care tips, and answer any questions. What would you like to know?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Suggestions -->
+                <div class="px-6 pb-4">
+                    <p class="text-sm text-gray-600 mb-2">Quick suggestions:</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="suggestion-btn px-4 py-2 bg-purple-50 text-purple-600 rounded-full text-sm hover:bg-purple-100 transition">
+                            What suits my face shape?
+                        </button>
+                        <button class="suggestion-btn px-4 py-2 bg-purple-50 text-purple-600 rounded-full text-sm hover:bg-purple-100 transition">
+                            Show me fade styles
+                        </button>
+                        <button class="suggestion-btn px-4 py-2 bg-purple-50 text-purple-600 rounded-full text-sm hover:bg-purple-100 transition">
+                            Hair care tips
+                        </button>
+                        <button class="suggestion-btn px-4 py-2 bg-purple-50 text-purple-600 rounded-full text-sm hover:bg-purple-100 transition">
+                            Book appointment
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Input -->
+                <form id="chat-form" class="border-t p-4">
+                    <div class="flex gap-2">
+                        <input type="text" id="chat-input" placeholder="Type your message..." class="flex-1 p-3 border-2 border-gray-300 rounded-full focus:border-purple-600 outline-none" required>
+                        <button type="submit" class="bg-purple-600 text-white w-12 h-12 rounded-full hover:bg-purple-700 transition flex items-center justify-center">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+          const chatMessages = document.getElementById('chat-messages');
+          const chatForm = document.getElementById('chat-form');
+          const chatInput = document.getElementById('chat-input');
+          const context = [];
+
+          function addMessage(text, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flex items-start ' + (isUser ? 'justify-end' : '');
+            
+            if (isUser) {
+              messageDiv.innerHTML = \`
+                <div class="bg-purple-600 text-white rounded-2xl rounded-tr-none p-4 max-w-xs">
+                  <p>\${text}</p>
+                </div>
+              \`;
+            } else {
+              messageDiv.innerHTML = \`
+                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                  <i class="fas fa-robot text-purple-600"></i>
+                </div>
+                <div class="bg-gray-100 rounded-2xl rounded-tl-none p-4 max-w-xs">
+                  <p class="text-gray-800">\${text}</p>
+                </div>
+              \`;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+          }
+
+          async function sendMessage(message) {
+            addMessage(message, true);
+            context.push(\`Client: \${message}\`);
+            
+            // Show typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.className = 'flex items-center';
+            typingDiv.innerHTML = \`
+              <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                <i class="fas fa-robot text-purple-600"></i>
+              </div>
+              <div class="bg-gray-100 rounded-2xl p-4">
+                <i class="fas fa-spinner fa-spin text-purple-600"></i>
+              </div>
+            \`;
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+              const response = await fetch('/api/chat/message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message, context })
+              });
+
+              const data = await response.json();
+              document.getElementById('typing-indicator').remove();
+              
+              if (data.success) {
+                addMessage(data.response);
+                context.push(\`Barber AI: \${data.response}\`);
+              } else {
+                addMessage(data.fallback_response || "I'm here to help! What would you like to know?");
+              }
+            } catch (error) {
+              document.getElementById('typing-indicator').remove();
+              addMessage("I'm here to help! What would you like to know about hairstyles?");
+            }
+          }
+
+          chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const message = chatInput.value.trim();
+            if (!message) return;
+            
+            sendMessage(message);
+            chatInput.value = '';
+          });
+
+          document.querySelectorAll('.suggestion-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+              sendMessage(btn.textContent);
+            });
+          });
+        </script>
+    </body>
+    </html>
+  `)
+})
+
 // Landing Page
 app.get('/', (c) => {
   return c.html(`
@@ -137,8 +644,9 @@ app.get('/', (c) => {
                     <div class="hidden md:flex items-center space-x-8">
                         <a href="#features" class="text-gray-700 hover:text-purple-600 transition">Features</a>
                         <a href="#pricing" class="text-gray-700 hover:text-purple-600 transition">Pricing</a>
-                        <a href="#demo" class="text-gray-700 hover:text-purple-600 transition">Demo</a>
-                        <a href="#contact" class="text-gray-700 hover:text-purple-600 transition">Contact</a>
+                        <a href="/demo/try-on" class="text-gray-700 hover:text-purple-600 transition">Try AI Demo</a>
+                        <a href="/demo/booking" class="text-gray-700 hover:text-purple-600 transition">Booking Demo</a>
+                        <a href="/demo/chat" class="text-gray-700 hover:text-purple-600 transition">Chat Demo</a>
                         <button class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition hover-scale">
                             Start Free Trial
                         </button>
@@ -183,10 +691,10 @@ app.get('/', (c) => {
                             <i class="fas fa-rocket mr-2"></i>
                             Start Free 14-Day Trial
                         </button>
-                        <button id="try-on-demo-btn" class="bg-white text-purple-600 px-8 py-4 rounded-full text-lg font-semibold border-2 border-purple-600 hover:bg-purple-50 transition hover-scale">
+                        <a href="/demo/try-on" class="bg-white text-purple-600 px-8 py-4 rounded-full text-lg font-semibold border-2 border-purple-600 hover:bg-purple-50 transition hover-scale inline-block text-center">
                             <i class="fas fa-wand-magic-sparkles mr-2"></i>
                             Try AI Demo
-                        </button>
+                        </a>
                     </div>
                 </div>
                 
