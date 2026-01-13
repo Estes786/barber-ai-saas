@@ -1,0 +1,28 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "barber-ai-saas",
+  "compatibility_date": "2026-01-13",
+  "pages_build_output_dir": "./dist",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  // D1 Database for multi-tenant data
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "barber-ai-production",
+      "database_id": "" // Will be filled after creating database
+    }
+  ],
+  // R2 for storing photos (profile, portfolio, AI try-on results)
+  "r2_buckets": [
+    {
+      "binding": "R2",
+      "bucket_name": "barber-ai-photos"
+    }
+  ],
+  // Cloudflare AI for image processing and chatbot
+  "ai": {
+    "binding": "AI"
+  }
+}
