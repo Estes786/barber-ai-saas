@@ -6,7 +6,7 @@ import apiRoutes from './routes/api'
 import authRoutes from './routes/auth'
 import authUIRoutes from './routes/auth-ui'
 import dashboardApiRoutes from './routes/dashboard-api'
-import dashboardUIRoutes from './routes/dashboard-ui'
+import dashboardUIRoutes from './routes/dashboard-ui-isolated'
 
 const app = new Hono<{ Bindings: CloudflareBindings }>()
 

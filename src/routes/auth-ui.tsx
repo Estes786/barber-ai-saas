@@ -169,8 +169,17 @@ authUI.get('/login', (c) => {
                 localStorage.setItem('refresh_token', data.refresh_token);
                 localStorage.setItem('user', JSON.stringify(data.user));
 
-                // Redirect to unified dashboard for all roles
-                window.location.href = '/dashboard';
+                // Role-based redirect - ISOLATED DASHBOARDS
+                if (data.user.role === 'owner') {
+                  window.location.href = '/dashboard/owner';
+                } else if (data.user.role === 'barber') {
+                  window.location.href = '/dashboard/barber';
+                } else if (data.user.role === 'client') {
+                  window.location.href = '/dashboard/client';
+                } else {
+                  // Fallback to unified dashboard
+                  window.location.href = '/dashboard';
+                }
               } else {
                 errorMessage.textContent = data.error || 'Login failed. Please try again.';
                 errorMessage.classList.remove('hidden');
