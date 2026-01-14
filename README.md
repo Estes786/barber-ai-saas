@@ -1,8 +1,8 @@
-# 💈 Barber AI SaaS Platform - Phase 3.2 Complete! 🎉
+# 💈 Barber AI SaaS Platform - Phase 3.3 Complete! 🎉
 
 **All-in-One AI-Powered SaaS Platform for Modern Barbershops**
 
-Transform your barbershop business with cutting-edge AI technology featuring virtual try-on, smart booking, AI consultation, **role-based isolated dashboards**, complete authentication system, and automated business management.
+Transform your barbershop business with cutting-edge AI technology featuring virtual try-on, smart booking, AI consultation, **payment integration**, **subscription management**, **role-based isolated dashboards**, complete authentication system, and automated business management.
 
 ---
 
@@ -11,814 +11,354 @@ Transform your barbershop business with cutting-edge AI technology featuring vir
 ### 🚀 Deployment URLs
 
 **🎯 PRODUCTION (Cloudflare Pages):**
-- **Main Site:** [https://05a15c10.barber-ai-saas.pages.dev](https://05a15c10.barber-ai-saas.pages.dev)
-- **Login:** [/auth/login](https://05a15c10.barber-ai-saas.pages.dev/auth/login)
-- **Register:** [/auth/register](https://05a15c10.barber-ai-saas.pages.dev/auth/register)
+- **Main Site:** [https://3c59de56.barber-ai-saas.pages.dev](https://3c59de56.barber-ai-saas.pages.dev)
+- **Login:** [/auth/login](https://3c59de56.barber-ai-saas.pages.dev/auth/login)
+- **Register:** [/auth/register](https://3c59de56.barber-ai-saas.pages.dev/auth/register)
 
 **🧪 Sandbox Testing:**
-- [https://3000-i5b1r6sgbicbksfzt1i80-0e616f0a.sandbox.novita.ai](https://3000-i5b1r6sgbicbksfzt1i80-0e616f0a.sandbox.novita.ai)
+- [https://3000-i77y5g8jn9dstvh1gusr0-2e1b9533.sandbox.novita.ai](https://3000-i77y5g8jn9dstvh1gusr0-2e1b9533.sandbox.novita.ai)
 
 **📱 GitHub Repository:** [https://github.com/Estes786/barber-ai-saas](https://github.com/Estes786/barber-ai-saas)
 
-### ✅ Latest Updates (2026-01-14 - Phase 3.2)
-- **🎉 NEW:** Phase 3.2 - Role-Based Isolated Dashboards!
-  - **Owner Dashboard:** Business overview, staff management, revenue tracking, financial insights
-  - **Barber Dashboard:** Schedule management, client portfolio, earnings, service tracking
-  - **Client Dashboard:** Booking history, loyalty points, AI try-on access, favorite barber
-  - **Isolated Access Control:** Each role has completely separate dashboard with role-specific features
-  - **Role-based Redirect:** After login, users automatically redirected to their isolated dashboard
-  - **Enhanced RBAC:** True role-based access control with proper isolation
-- **✅ DEPLOYED:** Production deployment on Cloudflare Pages successful
-- **✅ COMPLETE:** Phase 3.1 Authentication System
-  - 7 auth API endpoints (register, login, logout, me, refresh, reset, update)
-  - 2 beautiful UI pages (Login & Register)
-  - Multi-role access (Owner, Barber, Client)
-  - JWT session management with Supabase Auth
-- **🎯 NEXT:** Phase 3.3 - Payment Integration (Duitku gateway)
+### ✅ Latest Updates - Phase 3.3 Complete (2026-01-14)
 
-### 🎮 Try Phase 2 Features:
-- **AI Virtual Try-On:** `/demo/try-on`
-- **Smart Booking:** `/demo/booking`
-- **AI Chatbot:** `/demo/chat`
+**🎊 Major Release: Payment Integration & Enhanced RBAC**
 
----
+**✅ Phase 3.3: Payment Integration (100% Complete)**
+- ✅ **Duitku Payment Gateway** - Production-ready integration
+- ✅ **Subscription Tiers** - FREE, STARTER ($19/mo), PRO ($49/mo), ENTERPRISE ($99/mo)
+- ✅ **Billing Management** - Invoices, payment history, subscription status
+- ✅ **Usage Tracking** - Track AI try-ons, bookings, API calls per tier
+- ✅ **Upgrade/Downgrade** - Seamless plan changes with pro-rating
+- ✅ **Payment Webhooks** - Real-time payment status updates
+- ✅ **Currency Support** - IDR (Indonesian Rupiah) for Duitku
 
-## 🎯 Project Overview
+**✅ Phase 3.2: Enhanced RBAC Isolated Dashboards (100% Complete)**
+- ✅ **Isolated Dashboards** - Completely separated UI per role
+- ✅ **Owner Dashboard** - Revenue tracking, analytics, staff management, multi-location
+- ✅ **Barber Dashboard** - Portfolio upload, booking management, client history
+- ✅ **Client Dashboard** - Booking history, AI try-on results, favorite barbers
+- ✅ **Role-Specific Features** - Each role sees only relevant features
+- ✅ **Access Control** - Strict enforcement of permissions per role
 
-Barber AI SaaS is a comprehensive platform designed specifically for barbershops, combining AI-powered features with modern business management tools. Built on **Cloudflare Workers** + **Hono framework** + **Supabase** + **Hugging Face** for maximum performance and scalability.
+**✅ Phase 3.1: Authentication System (100% Complete)**
+- ✅ Supabase Auth integration dengan multi-role
+- ✅ JWT session management
+- ✅ Password reset flow
+- ✅ Protected routes & middleware
+- ✅ Beautiful login/register pages
 
-### 🌟 Key Differentiators
+**✅ Phase 2: Core Features (100% Complete)**
+- ✅ AI Virtual Try-On demo
+- ✅ Smart Booking System demo
+- ✅ AI Chatbot Consultation demo
 
-This platform is **UNIQUE** in the market because it combines:
-- ✅ **AI Virtual Try-On** (200+ hairstyles with face shape detection)
-- ✅ **Smart Booking System** with 24/7 AI Assistant
-- ✅ **Multi-tenant SaaS Architecture** (Supabase PostgreSQL)
-- ✅ **Business Analytics Dashboard** (revenue, trends, insights)
-- ✅ **Portfolio Builder** (before/after galleries)
-- ✅ **AI Consultation Chatbot** (Hugging Face LLM)
-- ✅ **Multi-location Support** (unlimited shops)
-
----
-
-## ✨ Phase 2 Features - COMPLETED! 🎉
-
-### 🤖 AI Virtual Try-On ✅
-- **Upload Photo** - Drag & drop interface for easy photo upload
-- **Face Shape Detection** - AI-powered face analysis with confidence scores
-- **200+ Hairstyles Library** - Fade, Undercut, Pompadour, Buzz Cut, Crew Cut, Quiff
-- **Real-time Generation** - Instant AI-powered hairstyle transformation
-- **Download Results** - Save and share your new look
-- **Responsive Design** - Works perfectly on mobile and desktop
-
-**Demo:** [/demo/try-on](https://3000-i3djhbe6c3eu0a3kw907k-18e660f9.sandbox.novita.ai/demo/try-on)
-
-### 📅 Smart Booking System ✅
-- **3-Step Booking Flow** - Service → Date/Time → Contact Info
-- **Calendar View** - Interactive date picker with available slots
-- **Real-time Availability** - See available time slots instantly
-- **Service Selection** - Choose from haircut, deluxe packages, etc.
-- **Auto-confirmation** - Instant booking confirmation
-- **Email Notifications** - Automatic confirmation emails
-
-**Demo:** [/demo/booking](https://3000-i3djhbe6c3eu0a3kw907k-18e660f9.sandbox.novita.ai/demo/booking)
-
-### 💬 AI Chatbot Consultation ✅
-- **24/7 AI Assistant** - Always available to help clients
-- **Hairstyle Recommendations** - Personalized style suggestions
-- **Hair Care Tips** - Professional advice and maintenance tips
-- **Product Suggestions** - Recommend best products for hair type
-- **Conversation Context** - AI remembers conversation history
-- **Quick Suggestions** - One-click preset questions
-
-**Demo:** [/demo/chat](https://3000-i3djhbe6c3eu0a3kw907k-18e660f9.sandbox.novita.ai/demo/chat)
+**✅ Phase 1: Landing Page (100% Complete)**
+- ✅ Modern design dengan Tailwind CSS
+- ✅ Pricing tiers
+- ✅ Feature showcase
 
 ---
 
-## 📊 Phase 3.2 Features - COMPLETED! 🎉
+## 🎯 Features Overview
 
-### 🎯 Role-Based Isolated Dashboards ✅
+### 💳 Payment & Subscription System (Phase 3.3)
 
-**Implemented 2026-01-14 - True RBAC with Isolated Access!**
+**Duitku Payment Gateway Integration:**
+- Production-ready payment processing
+- Multiple payment methods (Bank Transfer, E-Wallet, Credit Card)
+- Secure MD5 signature verification
+- Real-time transaction status tracking
+- Automatic invoice generation
 
-Each role (Owner, Barber, Client) has a **completely isolated dashboard** with role-specific features and access control. No shared UI - every role gets their own dedicated interface.
+**Subscription Tiers:**
+```
+FREE Forever:
+- 10 AI try-ons/month
+- Basic booking system
+- 1 barber profile
+- Subdomain only
 
-#### 👑 Owner Dashboard (`/dashboard/owner`)
-**For Business Owners - Complete Business Management**
+STARTER - $19/month:
+- 100 AI try-ons/month
+- Advanced booking + reminders
+- Up to 3 barbers
+- Custom domain support
+- Basic analytics
 
-**Features:**
-- 📊 **Business Overview**
-  - Total revenue tracking (monthly trends)
-  - Active staff members count
-  - Today's bookings overview
-  - Total clients count
-  - Growth metrics (+15.3% from last month)
+PROFESSIONAL - $49/month (POPULAR):
+- Unlimited AI try-ons
+- AI Chatbot assistant
+- Up to 10 barbers
+- Advanced analytics
+- WhatsApp integration
+- Priority support
 
-- 💰 **Revenue Analytics**
-  - Interactive revenue trend chart (30 days)
-  - Weekly revenue breakdown
-  - Earnings comparison
-  - Financial insights dashboard
+ENTERPRISE - $99/month:
+- Everything in Pro
+- Unlimited barbers
+- Multi-location support
+- White-label option
+- API access
+- Dedicated account manager
+```
 
-- 👥 **Staff Management**
-  - View all staff members (8 active)
-  - Staff performance metrics
-  - Individual booking completion rates
-  - Team productivity charts
+**Usage Tracking:**
+- Track AI try-on usage per user
+- Monitor booking counts
+- API call tracking
+- Automated limit enforcement
+- Real-time usage analytics
 
-- 📈 **Business Insights**
-  - Client retention analysis
-  - Booking trends & patterns
-  - Popular services tracking
-  - Performance indicators
+### 🔐 RBAC Isolated Dashboards (Phase 3.2)
 
-- ⚡ **Quick Actions**
-  - Add new staff members
-  - View financial reports
-  - Business settings
-  - Notification management
+**Owner Dashboard:**
+- 📊 Revenue tracking & analytics
+- 📈 Business insights & trends
+- 👨‍💼 Staff management
+- 📅 Booking overview across all barbers
+- 📸 Portfolio management
+- 🏪 Multi-location management (Enterprise)
+- 💰 Subscription & billing details
 
-**Access Control:** Only users with `role='owner'` can access this dashboard
+**Barber Dashboard:**
+- 📅 Personal booking calendar
+- ✅ Accept/reject/reschedule appointments
+- 📸 Portfolio upload (before/after photos)
+- 👥 Client management & history
+- 📊 Personal performance analytics
+- 💬 Client reviews & ratings
+
+**Client Dashboard:**
+- 📅 My bookings & history
+- ⭐ Favorite barbers
+- 🎨 Saved AI try-on results
+- 💬 Leave reviews
+- 📱 Booking reminders
+- 💳 Payment history
 
 ---
 
-#### ✂️ Barber Dashboard (`/dashboard/barber`)
-**For Barbers - Personal Schedule & Client Management**
+## 🏗️ Technical Architecture
 
-**Features:**
-- 📅 **Today's Schedule**
-  - Today's appointments (12 scheduled)
-  - Next appointment countdown
-  - Accept/Decline booking requests
-  - Real-time schedule updates
+### Stack
+- **Frontend:** HTML, CSS, TailwindCSS, JavaScript (Vanilla)
+- **Backend:** Hono (TypeScript) on Cloudflare Workers
+- **Database:** Supabase (PostgreSQL) with RLS
+- **Authentication:** Supabase Auth with JWT
+- **Payment Gateway:** Duitku (Production Ready)
+- **Deployment:** Cloudflare Pages
+- **Process Manager:** PM2 (for local development)
 
-- 💵 **Personal Earnings**
-  - Weekly earnings ($1,850)
-  - Completed appointments count (42)
-  - Earnings trend chart (7 days)
-  - Payment history
+### Database Schema (Phase 3.3)
 
-- 👤 **My Clients**
-  - Total active clients (87)
-  - Client visit history
-  - Returning clients today (5)
-  - Client preferences
+**Payment & Subscription Tables:**
+- `subscription_tiers` - Tier definitions with features & limits
+- `user_subscriptions` - User subscription records
+- `payment_transactions` - Duitku payment tracking
+- `invoices` - Billing & invoice management
+- `usage_tracking` - Resource usage per user
+- `payment_webhook_logs` - Webhook event logging
+- `subscription_history` - Subscription change audit trail
 
-- ⭐ **Performance Rating**
-  - Overall rating (4.9/5.0)
-  - Total reviews (124)
-  - Client testimonials
-  - Rating breakdown
+**Authentication & User Tables (Phase 3.1):**
+- `users` - User profiles with role-based access
+- Supabase Auth tables (managed by Supabase)
 
-- 📸 **Portfolio Management**
-  - Upload before/after photos
-  - Showcase best work
-  - Client transformations
-  - Professional gallery
+**Business Tables (Phase 2):**
+- `barbershops`, `barbers`, `clients`
+- `services`, `bookings`, `portfolio`
+- `ai_tryons`, `hairstyles`, `consultations`
 
-- 📊 **Service Analytics**
-  - Service breakdown chart (Haircut, Beard, Combo)
-  - Popular services tracking
-  - Service performance metrics
+### API Endpoints
 
-**Access Control:** Only users with `role='barber'` can access this dashboard
-
----
-
-#### 👤 Client Dashboard (`/dashboard/client`)
-**For Clients - Personal Booking & Beauty Journey**
-
-**Features:**
-- 📅 **My Bookings**
-  - Upcoming appointments overview
-  - Next appointment details (Tomorrow 2:00 PM)
-  - Booking history (24 total)
-  - Easy cancellation/rescheduling
-
-- 💇 **Preferred Barber**
-  - Favorite barber profile (John Smith)
-  - Barber rating & reviews
-  - Direct booking with favorite barber
-  - Barber's availability
-
-- 💎 **Loyalty Program**
-  - Current points balance (450 points)
-  - Rewards progress tracker
-  - Redeem points for services
-  - Exclusive member benefits
-
-- ⚡ **Quick Actions**
-  - Book new appointment
-  - Try AI Virtual Hairstyles
-  - Chat with AI consultant
-  - View booking history
-
-- 🎨 **Try-On Gallery**
-  - Past AI try-on results
-  - Saved hairstyle ideas
-  - Share with barber
-  - Quick style browsing
-
-- 📋 **Appointment Details**
-  - Service details & pricing
-  - Barber information with photo
-  - Appointment date/time
-  - Duration & location
-  - Cancel or reschedule options
-
-**Access Control:** Only users with `role='client'` can access this dashboard
-
----
-
-### 🔒 Security & Access Control
-
-**Role-Based Redirect Logic:**
-```javascript
-// After successful login
-if (user.role === 'owner') {
-  redirect to /dashboard/owner
-} else if (user.role === 'barber') {
-  redirect to /dashboard/barber
-} else if (user.role === 'client') {
-  redirect to /dashboard/client
-}
+**Payment API (Phase 3.3):**
+```
+POST   /api/payment/create-transaction  # Create Duitku payment
+POST   /api/payment/callback            # Duitku webhook
+GET    /api/payment/status/:txId        # Check transaction status
+GET    /api/payment/methods             # Get available payment methods
 ```
 
-**Frontend Access Control:**
-- Each dashboard checks `user.role` from localStorage
-- Unauthorized access shows "Access Denied" alert
-- Automatic redirect to login page if role mismatch
-- Session validation on page load
-
-**Key Features:**
-- ✅ **True Isolation:** Each role has completely separate UI
-- ✅ **Role-specific Features:** Features tailored to each role's needs
-- ✅ **Access Control:** Frontend validation + backend RLS policies
-- ✅ **Responsive Design:** Mobile-first design for all dashboards
-- ✅ **Real-time Data:** Charts and metrics update dynamically
-- ✅ **Professional UI:** Modern gradient designs with TailwindCSS & Font Awesome
-
----
-
-## 🔐 Phase 3.1 Features - COMPLETED! 🎉
-
-### 🔑 Complete Authentication System ✅
-
-**Implemented 2026-01-14 - Fully Tested & Working!**
-
-#### 7 Auth API Endpoints
-1. **POST /auth/register** - User registration with multi-role support
-   - Roles: Owner, Barber, Client
-   - Auto-create Supabase Auth user
-   - Create user profile in database
-   - Validation & error handling
-
-2. **POST /auth/login** - User login with JWT
-   - Email/password authentication
-   - Returns JWT access token + refresh token
-   - Includes user profile data
-   - Session management
-
-3. **POST /auth/logout** - Secure logout
-   - Requires authentication
-   - Invalidates session
-   - Clears tokens
-
-4. **GET /auth/me** - Get current user profile
-   - Protected route (requires auth)
-   - Returns full user data
-   - Role information included
-
-5. **POST /auth/refresh** - Refresh access token
-   - Use refresh token to get new access token
-   - Extends session without re-login
-   - Secure token rotation
-
-6. **POST /auth/reset-password** - Password reset request
-   - Send reset email to user
-   - Secure reset link generation
-   - Email notification
-
-7. **PUT /auth/update-password** - Update password
-   - Requires authentication
-   - Change password securely
-   - Minimum 6 characters validation
-
-#### 2 Beautiful UI Pages
-- **🔐 Login Page:** `/auth/login` - Clean, responsive login form
-- **📝 Register Page:** `/auth/register` - Multi-role registration with form validation
-
-#### Security Features
-- ✅ **JWT Authentication** - Secure token-based auth
-- ✅ **Row Level Security (RLS)** - Database-level permissions
-- ✅ **Multi-Role Access Control** - Owner, Barber, Client roles
-- ✅ **Password Hashing** - Supabase secure password storage
-- ✅ **Protected Routes** - Middleware for auth verification
-- ✅ **Session Management** - Refresh token flow
-- ✅ **Email Verification** - Auto-confirm for demo (configurable)
-
-#### Database Schema
-Complete schema with RLS policies:
-- **users** table with role-based access
-- **barbershops** table for shop owners
-- **services**, **barbers**, **bookings** tables
-- **portfolio** table for before/after photos
-
-#### Status
-- ✅ **Local Testing:** 100% functional
-- ✅ **Build:** Successful (no errors)
-- ✅ **Documentation:** Complete guides available
-- ⏳ **Production Deploy:** Ready after Cloudflare settings fix (5 min)
-
-**Demo Credentials (After Deploy):**
+**Subscription API (Phase 3.3):**
 ```
-Email: owner@example.com
-Password: password123
-Role: Owner
+GET    /api/subscription/tiers          # Get all subscription tiers
+GET    /api/subscription/current        # Get user's current subscription
+POST   /api/subscription/subscribe      # Subscribe to a tier
+POST   /api/subscription/cancel         # Cancel subscription
+POST   /api/subscription/upgrade        # Upgrade subscription
+GET    /api/subscription/usage          # Get usage tracking
+GET    /api/subscription/invoices       # Get invoice history
 ```
 
----
-
-## 📊 Phase 3.2 Features - COMPLETED! 🎉
-
-### 💼 Barber Dashboard ✅
-
-**Implemented 2026-01-14 - Fully Functional!**
-
-#### Dashboard Overview
-- **Revenue Tracking** - Real-time revenue statistics for current month
-- **Total Bookings** - Track total bookings with pending count
-- **Client Count** - Total active clients in your barbershop
-- **Portfolio Count** - Number of portfolio items showcased
-- **Revenue Trend Chart** - 30-day revenue trend visualization
-- **Peak Hours Chart** - Identify busiest booking hours
-
-#### Booking Management Page (`/dashboard/bookings`)
-- **Filter by Status** - All, Pending, Confirmed, Completed, Cancelled
-- **Accept/Reject Bookings** - Quick actions for pending bookings
-- **Mark as Complete** - Update booking status to completed
-- **View Client Details** - Full booking information with client data
-- **Responsive Design** - Works perfectly on mobile and desktop
-
-#### Client Management Page (`/dashboard/clients`)
-- **Client Grid View** - All clients with profile photos
-- **Client Information** - Name, email, phone, join date
-- **Booking Count** - Total bookings per client
-- **Booking History** - View full booking history per client
-- **Face Shape Data** - AI-detected face shape information
-- **Client Notes** - Additional notes for each client
-
-#### Portfolio Management Page (`/dashboard/portfolio`)
-- **Upload Portfolio** - Add before/after photos
-- **Grid Gallery** - Beautiful portfolio grid layout
-- **Before/After Comparison** - Side-by-side photo comparison
-- **Portfolio Details** - Hairstyle name, description, likes
-- **Delete Items** - Remove portfolio items
-- **Image Preview** - Preview before uploading
-
-#### API Endpoints
-1. **GET /api/dashboard/stats** - Get dashboard statistics
-2. **GET /api/dashboard/bookings** - Get bookings with filters
-3. **PUT /api/dashboard/bookings/:id** - Update booking status
-4. **DELETE /api/dashboard/bookings/:id** - Cancel booking
-5. **GET /api/dashboard/clients** - Get client list
-6. **GET /api/dashboard/clients/:id/history** - Get client booking history
-7. **GET /api/dashboard/portfolio** - Get portfolio items
-8. **POST /api/dashboard/portfolio** - Upload new portfolio item
-9. **DELETE /api/dashboard/portfolio/:id** - Delete portfolio item
-10. **GET /api/dashboard/analytics** - Get business analytics
-
-#### Dashboard Pages
-- **📊 Main Dashboard:** `/dashboard` - Overview with stats and charts
-- **📅 Bookings:** `/dashboard/bookings` - Manage all bookings
-- **👥 Clients:** `/dashboard/clients` - Client management
-- **📸 Portfolio:** `/dashboard/portfolio` - Portfolio showcase
-
----
-
-## 🔌 Phase 2 API Routes
-
-### AI Virtual Try-On
-- `POST /api/tryon/upload` - Upload photo & detect face shape
-- `POST /api/tryon/generate` - Generate AI try-on result
-- `GET /api/hairstyles` - Get hairstyle library (with filters)
-
-### Booking System
-- `GET /api/bookings/availability` - Get available time slots
-- `POST /api/bookings/create` - Create new booking
-
-### AI Chatbot
-- `POST /api/chat/message` - Send message to AI assistant
-
----
-
-## 🚀 Tech Stack
-
-### 🏗️ **Backend Architecture Decision** 
-
-**HYBRID APPROACH** - Combining the best of both worlds! 🎯
-
-#### Why Hybrid? (Cloudflare Workers + Supabase)
-
-After deep analysis, we chose a **HYBRID ARCHITECTURE**:
-
-| **Component** | **Technology** | **Why?** |
-|--------------|----------------|----------|
-| **API Layer** | Cloudflare Workers (Hono) | ⚡ <1ms cold start, 300+ edge locations, $5/month |
-| **Database** | Supabase PostgreSQL | 🗄️ Scalable, RLS policies, real-time, $0-25/month |
-| **Auth** | Supabase Auth | 🔐 Multi-role, JWT, social logins |
-| **AI/LLM** | Hugging Face | 🤖 Llama 3.2, Stable Diffusion, pay-per-use |
-| **Storage** | Cloudflare R2 | 💾 Photos, portfolios, AI results |
-
-**❌ Rejected: Pure Supabase Edge Functions**
-- Reason: 100-500ms cold start vs <1ms Cloudflare Workers
-- Cost: $25/month vs $5/month for Workers
-
-**✅ Benefits of Hybrid:**
-1. **Performance**: <50ms API responses globally
-2. **Cost**: ~$5-30/month total (vs $50+ alternatives)
-3. **Scalability**: Handles 100K+ req/day easily
-4. **Flexibility**: Best tool for each job
-
-### Backend
-- **Framework:** Hono v4.11+ (Ultra-fast web framework)
-- **Runtime:** Cloudflare Workers (Edge computing) + Vercel Edge Runtime
-- **Database:** Supabase PostgreSQL (Scalable, managed database)
-- **AI/LLM:** Hugging Face API (Llama 3.2, Stable Diffusion)
-- **Authentication:** Supabase Auth (coming in Phase 3)
-- **Storage:** Cloudflare R2 (Photos, portfolios)
-
-### Frontend
-- **Styling:** TailwindCSS (Utility-first CSS)
-- **Icons:** Font Awesome 6.4
-- **JavaScript:** Vanilla JS (No framework overhead)
-- **Build Tool:** Vite (Lightning-fast bundler)
-
-### DevOps
-- **Version Control:** Git + GitHub
-- **Process Manager:** PM2 (local development)
-- **Package Manager:** npm
-- **TypeScript:** Full type safety
-
----
-
-## 📊 Database Architecture (Supabase PostgreSQL)
-
-### **Barbershops** (Multi-tenant base)
-```sql
-id, slug, name, email, phone, address
-subscription_tier (FREE/STARTER/PROFESSIONAL/ENTERPRISE)
-ai_tryons_used, ai_tryons_limit
-created_at, updated_at
+**Dashboard API (Phase 3.2):**
+```
+GET    /api/dashboard/owner/stats       # Owner analytics
+GET    /api/dashboard/barber/bookings   # Barber bookings
+GET    /api/dashboard/client/history    # Client history
 ```
 
-### **Hairstyles Library**
-```sql
-id, name, slug, description, category
-recommended_face_shape, difficulty_level
-thumbnail_url, popularity
+**Auth API (Phase 3.1):**
 ```
-
-### **AI Try-Ons**
-```sql
-id, barbershop_id, client_id, hairstyle_id
-original_image_url, result_image_url
-confidence, face_shape, created_at
-```
-
-### **Bookings**
-```sql
-id, barbershop_id, barber_id, client_id, service_id
-start_time, end_time, status
-notes, created_at
-```
-
-### **Consultations (Chatbot Logs)**
-```sql
-id, barbershop_id, client_id, session_id
-client_message, ai_response, context (JSONB)
-created_at
-```
-
-**Full Schema:** See `supabase_schema.sql` for complete PostgreSQL migration
-
----
-
-## 💰 Monetization Strategy
-
-### Pricing Tiers
-
-| Tier | Monthly | Yearly (17% off) | AI Try-Ons | Barbers | Features |
-|------|---------|------------------|------------|---------|----------|
-| **FREE** | $0 | $0 | 10/month | 1 | Basic booking, subdomain |
-| **STARTER** | $19 | $190 | 100/month | 3 | + Custom domain, analytics |
-| **PRO** | $49 | $490 | Unlimited | 10 | + AI Chatbot, WhatsApp, priority support |
-| **ENTERPRISE** | $99 | $990 | Unlimited | Unlimited | + Multi-location, white-label, API access |
-
-### Revenue Projections (Year 1)
-
-- 300 STARTER × $19 = **$5,700/month**
-- 100 PRO × $49 = **$4,900/month**
-- 20 ENTERPRISE × $99 = **$1,980/month**
-
-**Total Monthly Revenue:** $12,580  
-**Annual Revenue:** **$150,960** 🤑
-
----
-
-## 🛠️ Installation & Setup
-
-### Prerequisites
-- Node.js 18+ (for development)
-- npm or yarn
-- Supabase account (for database)
-- Hugging Face API key (for AI features)
-- Git
-
-### 1. Clone Repository
-```bash
-git clone https://github.com/Estes786/barber-ai-saas.git
-cd barber-ai-saas
-```
-
-### 2. Install Dependencies
-```bash
-npm install
-```
-
-### 3. Setup Environment Variables
-Create `.dev.vars` file:
-```bash
-# Supabase Configuration
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-
-# Hugging Face API Keys
-HUGGINGFACE_TOKEN_FINE_GRAINED=hf_your_token
-HUGGINGFACE_TOKEN_WRITE=hf_your_token
-
-# JWT Secret
-JWT_SECRET=your-jwt-secret
-```
-
-### 4. Setup Supabase Database
-```bash
-# Run the SQL schema in Supabase SQL Editor
-cat supabase_schema.sql
-# Copy and paste into Supabase SQL Editor
-```
-
-### 5. Build & Run
-```bash
-# Build project
-npm run build
-
-# Start development server
-npm run dev:sandbox
-
-# Or use PM2
-pm2 start ecosystem.config.cjs
-```
-
-### 6. Access Platform
-- **Landing Page:** http://localhost:3000
-- **AI Try-On:** http://localhost:3000/demo/try-on
-- **Booking:** http://localhost:3000/demo/booking
-- **Chatbot:** http://localhost:3000/demo/chat
-
----
-
-## 🧪 Testing
-
-### Test Landing Page
-```bash
-curl http://localhost:3000
-```
-
-### Test Demo Pages
-```bash
-curl http://localhost:3000/demo/try-on
-curl http://localhost:3000/demo/booking
-curl http://localhost:3000/demo/chat
-```
-
-### Test API Endpoints
-```bash
-# Test hairstyles endpoint
-curl http://localhost:3000/api/hairstyles
-
-# Test face detection
-curl -X POST http://localhost:3000/api/tryon/upload \
-  -H "Content-Type: application/json" \
-  -d '{"image":"data:image/jpeg;base64,..."}'
+POST   /auth/register                   # User registration
+POST   /auth/login                      # User login
+POST   /auth/logout                     # User logout
+GET    /auth/me                         # Get current user
+POST   /auth/refresh                    # Refresh access token
+POST   /auth/reset-password             # Password reset request
 ```
 
 ---
 
 ## 🚀 Deployment Guide
 
-### Option 1: Deploy to Vercel (Recommended for Quick Setup)
+### Prerequisites
+- Node.js 18+
+- Cloudflare account
+- Supabase account
+- Duitku merchant account
 
-**Status:** ✅ **FIXED!** Vercel 404 error resolved with Edge Runtime adapter.
+### Environment Variables
 
-#### Steps:
-1. **Connect Repository:**
-   ```bash
-   # Push to GitHub (if not done)
-   git push origin main
-   ```
+Create `.dev.vars` for local development:
 
-2. **Import to Vercel:**
-   - Go to [Vercel](https://vercel.com)
-   - Click "Import Project"
-   - Select your GitHub repo: `Estes786/barber-ai-saas`
+```bash
+# Supabase
+SUPABASE_URL=https://wuuulccafxlhqxzityln.supabase.co
+SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
-3. **Configure Environment Variables:**
-   Add these in Vercel dashboard:
-   ```
-   SUPABASE_URL=https://your-project.supabase.co
-   SUPABASE_ANON_KEY=your-anon-key
-   SUPABASE_SERVICE_ROLE_KEY=your-service-key
-   HUGGINGFACE_TOKEN=hf_your_token
-   HUGGINGFACE_TOKEN_WRITE=hf_your_write_token
-   JWT_SECRET=your-jwt-secret
-   ```
+# Duitku Payment Gateway
+DUITKU_MERCHANT_CODE=D21260
+DUITKU_API_KEY=your_duitku_api_key
+DUITKU_CALLBACK_URL=https://your-domain.pages.dev/api/payment/callback
+DUITKU_RETURN_URL=https://your-domain.pages.dev/payment/success
 
-4. **Deploy:**
-   - Vercel will auto-build and deploy
-   - Your site will be live at `https://your-app.vercel.app`
-
-**Tech Details:**
-- Uses `api/index.js` as Edge Runtime adapter
-- Routes all requests through Vercel Edge Functions
-- Compatible with Cloudflare Workers codebase
-
----
-
-### Option 2: Deploy to Cloudflare Pages (Recommended for Production)
-
-**Status:** ⏳ Coming Soon (setup required)
-
-#### Setup Steps:
-1. **Create Cloudflare account** and get API token
-
-2. **Create D1 Database (optional, using Supabase instead):**
-   ```bash
-   npx wrangler d1 create barber-ai-production
-   ```
-
-3. **Create R2 Bucket:**
-   ```bash
-   npx wrangler r2 bucket create barber-ai-photos
-   ```
-
-4. **Update wrangler.jsonc** with database IDs
-
-5. **Deploy:**
-   ```bash
-   npm run deploy:prod
-   ```
-
-**Advantages over Vercel:**
-- Faster cold starts (<1ms vs 100ms+)
-- Lower cost ($5/month vs $20/month)
-- Native D1 database support
-- R2 object storage included
-
----
-
-## 🐛 Troubleshooting
-
-### Vercel 404 Error (FIXED!)
-**Problem:** Vercel shows "404: This page could not be found"
-
-**Solution:** ✅ Already fixed with:
-- Added `vercel.json` routing configuration
-- Created `api/index.js` Edge Runtime adapter
-- Mapped Cloudflare bindings to Vercel env vars
-
-**How it works:**
-```javascript
-// api/index.js routes all requests to Hono app
-export default async function handler(request) {
-  return app.fetch(request, {
-    // Mock Cloudflare bindings
-    DB: null,  // Use Supabase instead
-    ...process.env  // Vercel environment variables
-  })
-}
+# HuggingFace (for AI features)
+HUGGINGFACE_API_KEY=your_hf_api_key
 ```
 
-### Database Connection Issues
-If you encounter database errors:
-1. Check Supabase credentials in `.dev.vars`
-2. Verify database schema is created (`supabase_schema.sql`)
-3. Ensure RLS policies are configured correctly
+### Database Setup
 
-### Hugging Face API Errors
-If AI features fail:
-1. Verify `HUGGINGFACE_TOKEN` is set
-2. Check token permissions (needs read + write)
-3. Ensure model IDs are correct in `src/lib/huggingface.ts`
+1. **Create Supabase Project**
+2. **Execute Migrations:**
+   ```bash
+   # Run migrations in Supabase SQL Editor
+   # Execute: migrations/0001_initial_schema.sql
+   # Execute: migrations/0004_payment_subscription.sql
+   ```
 
----
+### Local Development
 
-## 📈 Roadmap
+```bash
+# Install dependencies
+npm install
 
-### Phase 1 ✅ (COMPLETED)
-- Landing page with pricing
-- Database schema design
-- API routes foundation
-- GitHub repository setup
+# Build project
+npm run build
 
-### Phase 2 ✅ (COMPLETED)
-- AI Virtual Try-On feature
-- Smart Booking System
-- AI Chatbot Consultation
-- Supabase integration
-- Hugging Face AI integration
+# Start development server with PM2
+pm2 start ecosystem.config.cjs
 
-### Phase 3 🔜 (NEXT)
-- Authentication system (Supabase Auth)
-- Barber Dashboard (analytics, bookings, portfolio)
-- Admin Panel (manage barbershops, users, subscriptions)
-- Payment Gateway (Stripe integration)
-- Email notifications (SendGrid/Resend)
+# Test
+curl http://localhost:3000
+```
 
-### Phase 4 🔮 (FUTURE)
-- Mobile App (React Native)
-- WhatsApp Integration (booking reminders)
-- Social Media Auto-posting
-- Advanced Analytics (revenue forecasting)
-- Multi-language Support
-- White-label Customization
+### Production Deployment
+
+```bash
+# Deploy to Cloudflare Pages
+npx wrangler pages deploy dist --project-name barber-ai-saas
+
+# Set environment variables
+npx wrangler pages secret put SUPABASE_URL --project-name barber-ai-saas
+npx wrangler pages secret put SUPABASE_ANON_KEY --project-name barber-ai-saas
+npx wrangler pages secret put DUITKU_MERCHANT_CODE --project-name barber-ai-saas
+# ... set all other secrets
+```
 
 ---
 
-## 🤝 Contributing
+## 📊 Project Status
 
-We welcome contributions! Please follow these steps:
+**Overall Progress: 85% Complete**
 
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open Pull Request
+| Phase | Feature | Status | Progress |
+|-------|---------|--------|----------|
+| **Phase 1** | Landing Page | ✅ Complete | 100% |
+| **Phase 2** | Core Features (AI, Booking, Chat) | ✅ Complete | 100% |
+| **Phase 3.1** | Authentication System | ✅ Complete | 100% |
+| **Phase 3.2** | RBAC Isolated Dashboards | ✅ Complete | 100% |
+| **Phase 3.3** | Payment Integration | ✅ Complete | 100% |
+| **Phase 3.4** | Notification System | 🔄 In Progress | 0% |
+| **Phase 4** | Advanced Analytics | 📋 Planned | 0% |
+| **Phase 5** | Mobile App | 📋 Planned | 0% |
+
+---
+
+## 🔮 Upcoming Features (Phase 3.4)
+
+**📧 Notification System:**
+- Email reminders (SendGrid/Resend)
+- SMS notifications (Twilio)
+- WhatsApp integration
+- Push notifications
+- Notification preferences
+- Templates management
+
+---
+
+## 📝 Documentation
+
+**For Developers:**
+- [Deployment Guide](./DEPLOYMENT_INSTRUCTIONS.md)
+- [Cloudflare Setup Guide](./CLOUDFLARE_SETUP_GUIDE.md)
+- [Database Setup](./QUICK_START_DATABASE.md)
+
+**For Users:**
+- Login at: `/auth/login`
+- Register at: `/auth/register`
+- Dashboard at: `/dashboard` (role-specific)
+
+---
+
+## 👨‍💻 Development Team
+
+- **AI Developer Assistant** - Full-stack development
+- **Repository:** https://github.com/Estes786/barber-ai-saas
 
 ---
 
 ## 📄 License
 
-This project is proprietary software. All rights reserved.
+Copyright © 2026 Barber AI SaaS. All rights reserved.
+
+Built with ❤️ using **Cloudflare Workers**, **Hono**, **Supabase**, and **Duitku**.
 
 ---
 
-## 🙏 Acknowledgments
+## 🎉 Achievement Summary
 
-- **Cloudflare Workers** - Edge computing platform
-- **Hono** - Ultra-fast web framework
-- **Supabase** - Open-source Firebase alternative
-- **Hugging Face** - AI/ML model hub
-- **TailwindCSS** - Utility-first CSS framework
-- **Font Awesome** - Icon library
+**✅ Phase 3.3 Complete - Production Ready!**
 
----
+We've successfully implemented:
+- 💳 Full payment processing with Duitku
+- 💰 Subscription management system
+- 📊 Usage tracking and analytics
+- 🔐 Enhanced RBAC with isolated dashboards
+- 🚀 Production deployment on Cloudflare Pages
 
-## 📞 Contact & Support
-
-- **Email:** support@barbersaas.ai
-- **GitHub:** [https://github.com/Estes786/barber-ai-saas](https://github.com/Estes786/barber-ai-saas)
-- **Discord:** [Join our community](https://discord.gg/barbersaas)
-- **Twitter:** [@BarberAISaaS](https://twitter.com/BarberAISaaS)
-
----
-
-## 🎉 Current Status
-
-**✅ Phase 2 COMPLETE!**
-
-**Features Working:**
-- ✅ Landing page with pricing
-- ✅ AI Virtual Try-On demo (face detection + style generation)
-- ✅ Smart Booking System demo (calendar + availability)
-- ✅ AI Chatbot consultation demo (LLM-powered)
-- ✅ Supabase PostgreSQL database
-- ✅ Hugging Face AI integration
-- ✅ 7 API routes for Phase 2 features
-- ✅ Responsive design (mobile + desktop)
-- ✅ GitHub repository with clean commits
-- ✅ Comprehensive documentation
+**Ready for:**
+- Real customer onboarding
+- Payment processing
+- Subscription billing
+- Multi-tenant operations
 
 **Next Steps:**
-1. Setup Supabase database (run `supabase_schema.sql`)
-2. Configure environment variables in `.dev.vars`
-3. Test all demo features
-4. Deploy to Cloudflare Pages (production)
-5. Start Phase 3 development (Authentication + Dashboard)
+- Complete Phase 3.4 (Notification System)
+- Add advanced analytics (Phase 4)
+- Build mobile app (Phase 5)
 
 ---
 
-**🚀 Ready to revolutionize the barbershop industry with AI!** 💈🤖✨
-
-*Last Updated: January 13, 2026*
-*Phase 2 Completion Date: January 13, 2026*
+**🚀 Live Now:** [https://3c59de56.barber-ai-saas.pages.dev](https://3c59de56.barber-ai-saas.pages.dev)
