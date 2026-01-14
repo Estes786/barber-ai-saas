@@ -5,6 +5,8 @@ import type { CloudflareBindings } from './types'
 import apiRoutes from './routes/api'
 import authRoutes from './routes/auth'
 import authUIRoutes from './routes/auth-ui'
+import dashboardApiRoutes from './routes/dashboard-api'
+import dashboardUIRoutes from './routes/dashboard-ui'
 
 const app = new Hono<{ Bindings: CloudflareBindings }>()
 
@@ -17,11 +19,17 @@ app.use('/static/*', serveStatic({ root: './public' }))
 // Mount Phase 2 API routes (Supabase-powered)
 app.route('/api', apiRoutes)
 
-// Mount Phase 3 Auth routes (API)
+// Mount Phase 3.1 Auth routes (API)
 app.route('/auth', authRoutes)
 
-// Mount Phase 3 Auth UI routes (Pages)
+// Mount Phase 3.1 Auth UI routes (Pages)
 app.route('/auth', authUIRoutes)
+
+// Mount Phase 3.2 Dashboard routes (API)
+app.route('/api/dashboard', dashboardApiRoutes)
+
+// Mount Phase 3.2 Dashboard UI routes (Pages)
+app.route('/', dashboardUIRoutes)
 
 // API Routes - Barbershops
 app.get('/api/barbershops', async (c) => {
