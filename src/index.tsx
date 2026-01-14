@@ -655,9 +655,10 @@ app.get('/', (c) => {
                         <a href="/demo/try-on" class="text-gray-700 hover:text-purple-600 transition">Try AI Demo</a>
                         <a href="/demo/booking" class="text-gray-700 hover:text-purple-600 transition">Booking Demo</a>
                         <a href="/demo/chat" class="text-gray-700 hover:text-purple-600 transition">Chat Demo</a>
-                        <button class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition hover-scale">
+                        <a href="/auth/login" class="text-gray-700 hover:text-purple-600 transition">Login</a>
+                        <a href="/auth/register" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition hover-scale">
                             Start Free Trial
-                        </button>
+                        </a>
                     </div>
                     
                     <div class="md:hidden flex items-center">
@@ -673,11 +674,13 @@ app.get('/', (c) => {
                 <div class="px-4 py-4 space-y-3">
                     <a href="#features" class="block text-gray-700 hover:text-purple-600">Features</a>
                     <a href="#pricing" class="block text-gray-700 hover:text-purple-600">Pricing</a>
-                    <a href="#demo" class="block text-gray-700 hover:text-purple-600">Demo</a>
-                    <a href="#contact" class="block text-gray-700 hover:text-purple-600">Contact</a>
-                    <button class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-full">
+                    <a href="/demo/try-on" class="block text-gray-700 hover:text-purple-600">Try AI Demo</a>
+                    <a href="/demo/booking" class="block text-gray-700 hover:text-purple-600">Booking Demo</a>
+                    <a href="/demo/chat" class="block text-gray-700 hover:text-purple-600">Chat Demo</a>
+                    <a href="/auth/login" class="block text-gray-700 hover:text-purple-600">Login</a>
+                    <a href="/auth/register" class="block w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-full text-center">
                         Start Free Trial
-                    </button>
+                    </a>
                 </div>
             </div>
         </nav>
@@ -695,10 +698,10 @@ app.get('/', (c) => {
                         Business Analytics, and Automated Marketing
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <button class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-2xl transition hover-scale">
+                        <a href="/auth/register" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-2xl transition hover-scale inline-block text-center">
                             <i class="fas fa-rocket mr-2"></i>
                             Start Free 14-Day Trial
-                        </button>
+                        </a>
                         <a href="/demo/try-on" class="bg-white text-purple-600 px-8 py-4 rounded-full text-lg font-semibold border-2 border-purple-600 hover:bg-purple-50 transition hover-scale inline-block text-center">
                             <i class="fas fa-wand-magic-sparkles mr-2"></i>
                             Try AI Demo
@@ -928,9 +931,9 @@ app.get('/', (c) => {
                                 <span class="text-gray-600">Basic analytics</span>
                             </li>
                         </ul>
-                        <button class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-full font-semibold hover:shadow-lg transition">
+                        <a href="/auth/register" class="block w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-full font-semibold hover:shadow-lg transition text-center">
                             Start Free Trial
-                        </button>
+                        </a>
                     </div>
 
                     <!-- PROFESSIONAL Tier -->
@@ -969,9 +972,9 @@ app.get('/', (c) => {
                                 <span>Priority support</span>
                             </li>
                         </ul>
-                        <button class="w-full bg-white text-purple-600 py-3 rounded-full font-semibold hover:bg-purple-50 transition">
+                        <a href="/auth/register" class="block w-full bg-white text-purple-600 py-3 rounded-full font-semibold hover:bg-purple-50 transition text-center">
                             Start Free Trial
-                        </button>
+                        </a>
                     </div>
 
                     <!-- ENTERPRISE Tier -->
@@ -1027,14 +1030,14 @@ app.get('/', (c) => {
                     Join 1,500+ barbershops already using AI to grow their business
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button class="bg-white text-purple-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition hover-scale">
+                    <a href="/auth/register" class="bg-white text-purple-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition hover-scale inline-block text-center">
                         <i class="fas fa-rocket mr-2"></i>
                         Start Free 14-Day Trial
-                    </button>
-                    <button class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-purple-600 transition hover-scale">
+                    </a>
+                    <a href="/demo/try-on" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-purple-600 transition hover-scale inline-block text-center">
                         <i class="fas fa-calendar mr-2"></i>
-                        Schedule Demo
-                    </button>
+                        Try Demo
+                    </a>
                 </div>
                 <p class="mt-6 text-sm opacity-75">
                     No credit card required • Cancel anytime • 24/7 support
