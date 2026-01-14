@@ -163,19 +163,14 @@ authUI.get('/login', (c) => {
               const data = await response.json();
 
               if (data.success) {
-                // Save token to localStorage
+                // Save token to localStorage (consistent key naming)
+                localStorage.setItem('token', data.access_token);
                 localStorage.setItem('access_token', data.access_token);
                 localStorage.setItem('refresh_token', data.refresh_token);
                 localStorage.setItem('user', JSON.stringify(data.user));
 
-                // Redirect based on role
-                const redirectMap = {
-                  'owner': '/dashboard/owner',
-                  'barber': '/dashboard/barber',
-                  'client': '/dashboard/client'
-                };
-
-                window.location.href = redirectMap[data.user.role] || '/dashboard';
+                // Redirect to unified dashboard for all roles
+                window.location.href = '/dashboard';
               } else {
                 errorMessage.textContent = data.error || 'Login failed. Please try again.';
                 errorMessage.classList.remove('hidden');

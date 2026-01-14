@@ -13,14 +13,16 @@ Transform your barbershop business with cutting-edge AI technology featuring vir
 **Primary Deployments:**
 - **🔷 Vercel (Phase 1 & 2):** [https://barber-ai-saas.vercel.app](https://barber-ai-saas.vercel.app)
 - **🟠 Cloudflare Pages (Phase 3.1):** Ready to deploy! See `DEPLOYMENT_FIX.md`
-- **🧪 Sandbox Testing:** [https://3000-iiytmdvwuywg1iw9129ak-5634da27.sandbox.novita.ai](https://3000-iiytmdvwuywg1iw9129ak-5634da27.sandbox.novita.ai)
+- **🧪 Sandbox Testing:** [https://3000-ip3ic3jto0lhqk2umh9p7-cbeee0f9.sandbox.novita.ai](https://3000-ip3ic3jto0lhqk2umh9p7-cbeee0f9.sandbox.novita.ai)
 
 **📱 GitHub Repository:** [https://github.com/Estes786/barber-ai-saas](https://github.com/Estes786/barber-ai-saas)
 
 ### ✅ Latest Updates (2026-01-14)
-- **✅ COMPLETE:** Phase 3.2 Barber Dashboard implemented!
+- **✅ FIXED:** Phase 3.2 routing issue - Login now redirects to /dashboard correctly
+- **✅ TESTED:** Dashboard pages accessible (Dashboard, Bookings, Clients, Portfolio)
+- **✅ COMPLETE:** Phase 3.2 Barber Dashboard fully functional!
   - Dashboard with revenue tracking & analytics
-  - Booking management (accept/reject/reschedule)
+  - Booking management (accept/reject/reschedule)  
   - Client management with booking history
   - Portfolio upload (before/after photos)
   - Business insights & trends
@@ -31,8 +33,7 @@ Transform your barbershop business with cutting-edge AI technology featuring vir
   - 2 beautiful UI pages (Login & Register)
   - Multi-role access (Owner, Barber, Client)
   - JWT session management with Supabase Auth
-- **✅ TESTED:** All endpoints verified locally - 100% functional
-- **✅ DOCUMENTED:** Complete deployment fix guide
+- **✅ RUNNING:** Service deployed on port 3000 with PM2
 - **🎯 NEXT:** Phase 3.3 - Payment Integration (Duitku gateway)
 
 ### 🎮 Try Phase 2 Features:
