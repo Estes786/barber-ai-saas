@@ -7,6 +7,8 @@ import authRoutes from './routes/auth'
 import authUIRoutes from './routes/auth-ui'
 import dashboardApiRoutes from './routes/dashboard-api'
 import dashboardUIRoutes from './routes/dashboard-ui-isolated'
+import paymentRoutes from './routes/payment'
+import subscriptionRoutes from './routes/subscription'
 
 const app = new Hono<{ Bindings: CloudflareBindings }>()
 
@@ -30,6 +32,12 @@ app.route('/api/dashboard', dashboardApiRoutes)
 
 // Mount Phase 3.2 Dashboard UI routes (Pages)
 app.route('/', dashboardUIRoutes)
+
+// Mount Phase 3.3 Payment routes (API)
+app.route('/api/payment', paymentRoutes)
+
+// Mount Phase 3.3 Subscription routes (API)
+app.route('/api/subscription', subscriptionRoutes)
 
 // API Routes - Barbershops
 app.get('/api/barbershops', async (c) => {
