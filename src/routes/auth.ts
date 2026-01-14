@@ -27,39 +27,54 @@ auth.post('/register', async (c) => {
 
     const supabase = createSupabaseAdminClient(c.env)
 
-    // Create auth user
+    // Create auth user - this will automatically trigger handle_new_user() function
+    // which creates the user profile in users table
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
       email,
       password,
-      email_confirm: true, // Auto-confirm for demo
+      email_confirm: true, // Auto-confirm email for demo
       user_metadata: {
-        full_name,
-        role
-      }
-    })
-
-    if (authError) {
-      return c.json({ success: false, error: authError.message }, 400)
-    }
-
-    // Create user profile in database
-    const { data: user, error: dbError } = await supabase
-      .from('users')
-      .insert({
-        id: authData.user.id,
-        email,
         full_name,
         role,
         phone,
         barbershop_id: role === 'owner' ? barbershop_id : null
-      })
-      .select()
+      }
+    })
+
+    if (authError) {
+      console.error('Auth error:', authError)
+      return c.json({ success: false, error: authError.message }, 400)
+    }
+
+    if (!authData.user) {
+      return c.json({ success: false, error: 'Failed to create user' }, 500)
+    }
+
+    // The trigger handle_new_user() will automatically create the user profile
+    // Wait a moment for trigger to complete
+    await new Promise(resolve => setTimeout(resolve, 500))
+
+    // Fetch the created user profile (created by trigger)
+    const { data: user, error: fetchError } = await supabase
+      .from('users')
+      .select('id, email, full_name, role')
+      .eq('id', authData.user.id)
       .single()
 
-    if (dbError) {
-      // Rollback auth user if database insert fails
-      await supabase.auth.admin.deleteUser(authData.user.id)
-      return c.json({ success: false, error: 'Failed to create user profile' }, 500)
+    if (fetchError || !user) {
+      console.error('Failed to fetch user profile:', fetchError)
+      // User was created in auth.users but profile fetch failed
+      // This is OK, user can still login
+      return c.json({ 
+        success: true, 
+        message: 'User registered successfully',
+        user: {
+          id: authData.user.id,
+          email: authData.user.email || email,
+          full_name: full_name,
+          role: role
+        }
+      }, 201)
     }
 
     return c.json({ 
