@@ -9,6 +9,8 @@ import dashboardApiRoutes from './routes/dashboard-api'
 import dashboardUIRoutes from './routes/dashboard-ui-isolated'
 import paymentRoutes from './routes/payment'
 import subscriptionRoutes from './routes/subscription'
+import pricingUIRoutes from './routes/pricing-ui'
+import subscriptionUIRoutes from './routes/subscription-ui'
 
 const app = new Hono<{ Bindings: CloudflareBindings }>()
 
@@ -38,6 +40,12 @@ app.route('/api/payment', paymentRoutes)
 
 // Mount Phase 3.3 Subscription routes (API)
 app.route('/api/subscription', subscriptionRoutes)
+
+// Mount Phase 3.3 Pricing UI routes (Pages)
+app.route('/', pricingUIRoutes)
+
+// Mount Phase 3.3 Subscription UI routes (Pages)
+app.route('/', subscriptionUIRoutes)
 
 // API Routes - Barbershops
 app.get('/api/barbershops', async (c) => {
@@ -689,7 +697,7 @@ app.get('/', (c) => {
             <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
                 <div class="px-4 py-4 space-y-3">
                     <a href="#features" class="block text-gray-700 hover:text-purple-600">Features</a>
-                    <a href="#pricing" class="block text-gray-700 hover:text-purple-600">Pricing</a>
+                    <a href="/pricing" class="block text-gray-700 hover:text-purple-600">Pricing</a>
                     <a href="/demo/try-on" class="block text-gray-700 hover:text-purple-600">Try AI Demo</a>
                     <a href="/demo/booking" class="block text-gray-700 hover:text-purple-600">Booking Demo</a>
                     <a href="/demo/chat" class="block text-gray-700 hover:text-purple-600">Chat Demo</a>
