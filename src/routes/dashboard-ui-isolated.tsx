@@ -32,6 +32,9 @@ app.get('/dashboard/owner', (c) => {
                             <a href="/dashboard/owner" class="text-white font-semibold border-b-2 border-white pb-1">
                                 <i class="fas fa-tachometer-alt mr-1"></i>Dashboard
                             </a>
+                            <a href="/boss" class="text-purple-100 hover:text-white transition">
+                                <i class="fas fa-crown mr-1"></i>Boss Control
+                            </a>
                             <a href="/dashboard/owner/business" class="text-purple-100 hover:text-white transition">
                                 <i class="fas fa-store mr-1"></i>Business
                             </a>
