@@ -675,7 +675,7 @@ app.get('/', (c) => {
                     
                     <div class="hidden md:flex items-center space-x-8">
                         <a href="#features" class="text-gray-700 hover:text-purple-600 transition">Features</a>
-                        <a href="#pricing" class="text-gray-700 hover:text-purple-600 transition">Pricing</a>
+                        <a href="/pricing" class="text-gray-700 hover:text-purple-600 transition">Pricing</a>
                         <a href="/demo/try-on" class="text-gray-700 hover:text-purple-600 transition">Try AI Demo</a>
                         <a href="/demo/booking" class="text-gray-700 hover:text-purple-600 transition">Booking Demo</a>
                         <a href="/demo/chat" class="text-gray-700 hover:text-purple-600 transition">Chat Demo</a>
@@ -1087,7 +1087,7 @@ app.get('/', (c) => {
                         <h4 class="font-bold mb-4">Product</h4>
                         <ul class="space-y-2 text-gray-400">
                             <li><a href="#features" class="hover:text-white">Features</a></li>
-                            <li><a href="#pricing" class="hover:text-white">Pricing</a></li>
+                            <li><a href="/pricing" class="hover:text-white">Pricing</a></li>
                             <li><a href="#demo" class="hover:text-white">Demo</a></li>
                             <li><a href="#" class="hover:text-white">API Docs</a></li>
                         </ul>
