@@ -47,6 +47,10 @@ app.get('/dashboard/owner', (c) => {
                         </div>
                     </div>
                     <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-2 bg-purple-500 bg-opacity-80 px-3 py-1 rounded-full">
+                            <i class="fas fa-star text-yellow-300 text-sm"></i>
+                            <span class="text-white text-xs font-semibold">FREE PLAN</span>
+                        </div>
                         <span id="user-info" class="text-white font-semibold"></span>
                         <span class="px-3 py-1 bg-yellow-500 text-white text-xs font-bold rounded-full">OWNER</span>
                         <button id="logout-btn" class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition">
@@ -65,6 +69,36 @@ app.get('/dashboard/owner', (c) => {
                     <div>
                         <h3 class="font-bold text-yellow-900">Owner Dashboard</h3>
                         <p class="text-sm text-yellow-700">Manage your barbershop business, staff, and finances</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subscription Widget (Owner) -->
+            <div class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-6 text-white mb-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-white bg-opacity-20 p-3 rounded-full">
+                            <i class="fas fa-crown text-2xl"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2 mb-1">
+                                <h3 class="text-xl font-bold">Current Plan: FREE</h3>
+                                <span class="bg-yellow-500 text-xs px-2 py-1 rounded-full font-semibold">Trial</span>
+                            </div>
+                            <p class="text-purple-100 text-sm">Upgrade to unlock unlimited bookings & premium features</p>
+                            <div class="flex items-center space-x-4 mt-2 text-sm">
+                                <span><i class="fas fa-calendar-check mr-1"></i>5/10 bookings used</span>
+                                <span><i class="fas fa-magic mr-1"></i>3/5 AI try-ons used</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col space-y-2">
+                        <a href="/pricing" class="bg-white text-purple-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition text-center">
+                            <i class="fas fa-arrow-up mr-2"></i>Upgrade Now
+                        </a>
+                        <a href="/subscription" class="border-2 border-white text-white px-6 py-2 rounded-full font-semibold hover:bg-white hover:text-purple-600 transition text-center text-sm">
+                            Manage Subscription
+                        </a>
                     </div>
                 </div>
             </div>
@@ -266,6 +300,10 @@ app.get('/dashboard/barber', (c) => {
                         </div>
                     </div>
                     <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-2 bg-blue-500 bg-opacity-80 px-3 py-1 rounded-full">
+                            <i class="fas fa-star text-yellow-300 text-sm"></i>
+                            <span class="text-white text-xs font-semibold">FREE PLAN</span>
+                        </div>
                         <span id="user-info" class="text-white font-semibold"></span>
                         <span class="px-3 py-1 bg-blue-500 text-white text-xs font-bold rounded-full">BARBER</span>
                         <button id="logout-btn" class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition">
@@ -284,6 +322,36 @@ app.get('/dashboard/barber', (c) => {
                     <div>
                         <h3 class="font-bold text-blue-900">Barber Dashboard</h3>
                         <p class="text-sm text-blue-700">Manage your schedule, clients, and portfolio</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subscription Widget (Barber) -->
+            <div class="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl p-6 text-white mb-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-white bg-opacity-20 p-3 rounded-full">
+                            <i class="fas fa-scissors text-2xl"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2 mb-1">
+                                <h3 class="text-xl font-bold">Current Plan: FREE</h3>
+                                <span class="bg-yellow-500 text-xs px-2 py-1 rounded-full font-semibold">Trial</span>
+                            </div>
+                            <p class="text-blue-100 text-sm">Upgrade to PRO for unlimited appointments & advanced portfolio</p>
+                            <div class="flex items-center space-x-4 mt-2 text-sm">
+                                <span><i class="fas fa-calendar-check mr-1"></i>15/20 bookings this month</span>
+                                <span><i class="fas fa-images mr-1"></i>8/10 portfolio uploads</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col space-y-2">
+                        <a href="/pricing" class="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition text-center">
+                            <i class="fas fa-arrow-up mr-2"></i>Upgrade Now
+                        </a>
+                        <a href="/subscription" class="border-2 border-white text-white px-6 py-2 rounded-full font-semibold hover:bg-white hover:text-blue-600 transition text-center text-sm">
+                            View Plans
+                        </a>
                     </div>
                 </div>
             </div>
@@ -527,6 +595,10 @@ app.get('/dashboard/client', (c) => {
                         </div>
                     </div>
                     <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-2 bg-green-500 bg-opacity-80 px-3 py-1 rounded-full">
+                            <i class="fas fa-star text-yellow-300 text-sm"></i>
+                            <span class="text-white text-xs font-semibold">FREE PLAN</span>
+                        </div>
                         <span id="user-info" class="text-white font-semibold"></span>
                         <span class="px-3 py-1 bg-green-500 text-white text-xs font-bold rounded-full">CLIENT</span>
                         <button id="logout-btn" class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition">
@@ -545,6 +617,36 @@ app.get('/dashboard/client', (c) => {
                     <div>
                         <h3 class="font-bold text-green-900">Client Dashboard</h3>
                         <p class="text-sm text-green-700">Book appointments, try new hairstyles, and manage your profile</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subscription Widget (Client) -->
+            <div class="bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl p-6 text-white mb-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-white bg-opacity-20 p-3 rounded-full">
+                            <i class="fas fa-sparkles text-2xl"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2 mb-1">
+                                <h3 class="text-xl font-bold">Current Plan: FREE</h3>
+                                <span class="bg-yellow-500 text-xs px-2 py-1 rounded-full font-semibold">Basic</span>
+                            </div>
+                            <p class="text-green-100 text-sm">Upgrade for priority booking & exclusive hairstyle previews</p>
+                            <div class="flex items-center space-x-4 mt-2 text-sm">
+                                <span><i class="fas fa-calendar-check mr-1"></i>3/5 monthly bookings used</span>
+                                <span><i class="fas fa-magic mr-1"></i>2/3 AI try-ons remaining</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col space-y-2">
+                        <a href="/pricing" class="bg-white text-green-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition text-center">
+                            <i class="fas fa-arrow-up mr-2"></i>Upgrade Now
+                        </a>
+                        <a href="/subscription" class="border-2 border-white text-white px-6 py-2 rounded-full font-semibold hover:bg-white hover:text-green-600 transition text-center text-sm">
+                            View Plans
+                        </a>
                     </div>
                 </div>
             </div>
