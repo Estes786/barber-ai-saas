@@ -187,7 +187,6 @@ app.get('/subscription/upgrade', async (c) => {
                             'Authorization': 'Bearer ' + token
                         },
                         body: JSON.stringify({
-                            userId: 1, // TODO: Get from auth
                             tierId: tier === 'STARTER' ? 2 : (tier === 'PRO' ? 3 : 4),
                             billingCycle: billing,
                             paymentMethod: selectedPaymentMethod,

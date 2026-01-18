@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import type { CloudflareBindings, PaymentTransaction, UserSubscription, Invoice } from '../types';
 import { Duitku, generateMerchantOrderId, generateInvoiceNumber, centsToRupiah } from '../lib/duitku';
+import { authMiddleware } from '../middleware/auth';
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
 
@@ -70,16 +71,18 @@ app.get('/methods', async (c) => {
 
 /**
  * POST /api/payment/create
- * Create new payment transaction
+ * Create new payment transaction (Protected with auth middleware)
  */
-app.post('/create', async (c) => {
+app.post('/create', authMiddleware, async (c) => {
   try {
     const { DB } = c.env;
+    const user = c.get('user'); // Get verified user from auth middleware
     const body = await c.req.json();
     
-    const { userId, tierId, billingCycle, paymentMethod, email, fullName, phoneNumber } = body;
+    const { tierId, billingCycle, paymentMethod, email, fullName, phoneNumber } = body;
+    const userId = user.id; // Get userId from authenticated user (secure)
 
-    if (!userId || !tierId || !billingCycle || !paymentMethod || !email || !fullName) {
+    if (!tierId || !billingCycle || !paymentMethod || !email || !fullName) {
       return c.json({
         success: false,
         error: 'Missing required fields'
