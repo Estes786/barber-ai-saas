@@ -187,7 +187,7 @@ app.get('/subscription/upgrade', async (c) => {
                             'Authorization': 'Bearer ' + token
                         },
                         body: JSON.stringify({
-                            tierId: tier === 'STARTER' ? 2 : (tier === 'PRO' ? 3 : 4),
+                            tierId: tier, // Use tier string directly (STARTER, PRO, ENTERPRISE)
                             billingCycle: billing,
                             paymentMethod: selectedPaymentMethod,
                             email: document.getElementById('email').value,
@@ -605,12 +605,74 @@ app.get('/subscription', async (c) => {
         </div>
 
         <script>
-            function upgradeToPlan(planName, price) {
-                // Store selected plan in localStorage
-                localStorage.setItem('selectedPlan', JSON.stringify({ plan: planName, price: price }));
+            async function upgradeToPlan(planName, price) {
+                // Get authentication token
+                const token = localStorage.getItem('sb-access-token');
                 
-                // Redirect to payment page
-                window.location.href = '/pricing';
+                if (!token) {
+                    // Redirect to login if not authenticated
+                    window.location.href = '/auth/login?redirect=/subscription';
+                    return;
+                }
+                
+                // Show loading state
+                const button = event.target;
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+                button.disabled = true;
+                
+                try {
+                    // Get user data to get email and name
+                    const userResponse = await fetch('/auth/me', {
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        }
+                    });
+                    
+                    if (!userResponse.ok) {
+                        throw new Error('Failed to get user data');
+                    }
+                    
+                    const userData = await userResponse.json();
+                    const user = userData.user;
+                    
+                    // Create payment transaction
+                    const response = await fetch('/api/payment/create', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify({
+                            tierId: planName,
+                            billingCycle: 'MONTHLY',
+                            paymentMethod: 'BC', // Bank Transfer (default, user can choose later)
+                            email: user.email,
+                            fullName: user.name || user.email,
+                            phoneNumber: user.phone || '081234567890'
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success && result.transaction.paymentUrl) {
+                        // Store transaction reference
+                        localStorage.setItem('pendingTransaction', JSON.stringify(result.transaction));
+                        
+                        // Redirect to Duitku payment page
+                        window.location.href = result.transaction.paymentUrl;
+                    } else {
+                        throw new Error(result.error || 'Failed to create payment transaction');
+                    }
+                    
+                } catch (error) {
+                    console.error('Upgrade error:', error);
+                    alert('Failed to initiate payment: ' + error.message + '. Please try again or contact support.');
+                    
+                    // Restore button
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
             }
 
             // Check if user is authenticated using server-side session verification

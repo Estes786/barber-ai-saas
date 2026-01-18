@@ -264,7 +264,7 @@ app.post('/callback', async (c) => {
       false
     );
 
-    const isValid = duitku.verifyCallbackSignature(
+    const isValid = await duitku.verifyCallbackSignature(
       payload.merchantOrderId,
       payload.amount,
       payload.signature
