@@ -1,8 +1,33 @@
-# 🌟 BALIK.LAGI - COMPLETE ECOSYSTEM
+# 💈 Barber AI SaaS Platform
 
 **Tagline:** "Build SaaS Fast, Scale Smart, Leave Legacy"  
-**Philosophy:** "Sekali Cocok, Pengen Balik Lagi" + "Show Magic, Sell Tools, Hide Tricks"  
+**Status:** ✅ Phase 3.3 Complete - Auth Loop Fixed!  
 **Vision:** $20K+ MRR by Month 12, Investment-Ready Platform
+
+---
+
+## 🚀 LATEST UPDATE (2026-01-18)
+
+### ✅ Auth Loop Fix Complete!
+
+**Problem Resolved:**
+- Users yang sudah authenticated tidak lagi redirect ke login saat klik "View Plans" atau "Manage Subscription"
+- Token naming sekarang konsisten menggunakan `sb-access-token` (Supabase convention)
+- Semua subscription routes sekarang protected dengan JWT authentication middleware
+- Server-side session verification ditambahkan untuk security yang lebih baik
+
+**Changes Made:**
+- ✅ Added authentication middleware (`src/middleware/auth.ts`)
+- ✅ Protected all `/api/subscription/*` routes with JWT verification
+- ✅ Standardized token naming from `auth_token` to `sb-access-token`
+- ✅ Added `/auth/session` endpoint for server-side session validation
+- ✅ Updated frontend to use consistent token naming
+- ✅ Fixed redirect logic in subscription UI
+
+**Deployment Status:**
+- ✅ Code pushed to GitHub: https://github.com/Estes786/barber-ai-saas
+- ⏳ Cloudflare Pages auto-deploy in progress
+- 🔗 Production URL: https://barber-ai-saas.pages.dev
 
 ---
 
