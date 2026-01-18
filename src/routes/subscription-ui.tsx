@@ -3,6 +3,226 @@ import type { CloudflareBindings } from '../types'
 
 const app = new Hono<{ Bindings: CloudflareBindings }>()
 
+// Subscription Upgrade Page with Duitku Payment
+app.get('/subscription/upgrade', async (c) => {
+  const tier = c.req.query('tier') || 'STARTER';
+  const billing = c.req.query('billing') || 'MONTHLY';
+
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Upgrade Your Plan - Barber AI SaaS</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <style>
+            .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+            .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        </style>
+    </head>
+    <body class="bg-gradient-to-br from-purple-50 via-white to-purple-50 min-h-screen">
+        <div class="pt-12 pb-20 px-4">
+            <div class="max-w-4xl mx-auto">
+                <!-- Header -->
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-bold mb-4">
+                        <span class="gradient-text">Upgrade Your Plan</span>
+                    </h1>
+                    <p class="text-xl text-gray-600">
+                        Complete your upgrade to ${tier} plan
+                    </p>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg mb-8">
+                    <h2 class="text-2xl font-bold mb-6">Order Summary</h2>
+                    
+                    <div class="border-b pb-4 mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-700">Plan:</span>
+                            <span class="font-bold text-gray-900">${tier}</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-700">Billing Cycle:</span>
+                            <span class="font-bold text-gray-900">${billing}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center text-xl font-bold">
+                        <span>Total:</span>
+                        <span id="total-amount" class="text-purple-600">$19</span>
+                    </div>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg mb-8">
+                    <h2 class="text-2xl font-bold mb-6">
+                        <i class="fas fa-credit-card text-purple-600 mr-2"></i>
+                        Payment Method
+                    </h2>
+                    
+                    <div class="space-y-3" id="payment-methods">
+                        <div class="text-center text-gray-500">
+                            <i class="fas fa-spinner fa-spin text-3xl mb-3"></i>
+                            <p>Loading payment methods...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Information -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg mb-8">
+                    <h2 class="text-2xl font-bold mb-6">
+                        <i class="fas fa-user text-purple-600 mr-2"></i>
+                        Customer Information
+                    </h2>
+                    
+                    <form id="payment-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                            <input type="text" id="full-name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent" placeholder="John Doe">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                            <input type="email" id="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent" placeholder="john@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
+                            <input type="tel" id="phone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent" placeholder="+6281234567890">
+                        </div>
+
+                        <div class="flex items-center mt-6">
+                            <input type="checkbox" id="agree-tos" required class="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                            <label for="agree-tos" class="ml-2 text-sm text-gray-600">
+                                I agree to the <a href="#" class="text-purple-600 hover:underline">Terms of Service</a> and <a href="#" class="text-purple-600 hover:underline">Privacy Policy</a>
+                            </label>
+                        </div>
+
+                        <button type="submit" id="proceed-payment-btn" class="w-full gradient-bg text-white py-4 rounded-xl font-bold text-lg hover:opacity-90 transition shadow-lg">
+                            <i class="fas fa-lock mr-2"></i> Proceed to Payment
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Security Notice -->
+                <div class="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
+                    <i class="fas fa-shield-alt text-green-600 text-2xl mb-2"></i>
+                    <p class="text-sm text-green-800">Your payment is secured with 256-bit SSL encryption</p>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let selectedPaymentMethod = null;
+            const tier = '${tier}';
+            const billing = '${billing}';
+
+            // Fetch payment methods
+            async function loadPaymentMethods() {
+                try {
+                    const response = await fetch('/api/payment/methods?amount=19000');
+                    const data = await response.json();
+
+                    if (data.success && data.paymentMethods) {
+                        const container = document.getElementById('payment-methods');
+                        container.innerHTML = data.paymentMethods.map(method => 
+                            '<label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-purple-600 transition payment-method-option">' +
+                                '<input type="radio" name="payment-method" value="' + method.paymentMethod + '" class="w-5 h-5 text-purple-600" required>' +
+                                '<div class="ml-4 flex-1">' +
+                                    '<div class="font-semibold text-gray-900">' + method.paymentName + '</div>' +
+                                    '<div class="text-sm text-gray-600">Fee: Rp ' + method.totalFee.toLocaleString() + '</div>' +
+                                '</div>' +
+                                '<img src="' + method.paymentImage + '" alt="' + method.paymentName + '" class="h-8 object-contain">' +
+                            '</label>'
+                        ).join('');
+
+                        // Add event listeners
+                        document.querySelectorAll('input[name="payment-method"]').forEach(radio => {
+                            radio.addEventListener('change', (e) => {
+                                selectedPaymentMethod = e.target.value;
+                                document.querySelectorAll('.payment-method-option').forEach(opt => {
+                                    opt.classList.remove('border-purple-600', 'bg-purple-50');
+                                });
+                                e.target.closest('.payment-method-option').classList.add('border-purple-600', 'bg-purple-50');
+                            });
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error loading payment methods:', error);
+                    document.getElementById('payment-methods').innerHTML = 
+                        '<div class="text-center text-red-600">' +
+                            '<i class="fas fa-exclamation-triangle text-3xl mb-3"></i>' +
+                            '<p>Failed to load payment methods. Please try again.</p>' +
+                        '</div>';
+                }
+            }
+
+            // Handle form submission
+            document.getElementById('payment-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                if (!selectedPaymentMethod) {
+                    alert('Please select a payment method');
+                    return;
+                }
+
+                const button = document.getElementById('proceed-payment-btn');
+                button.disabled = true;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+
+                try {
+                    // Get user info from localStorage or form
+                    const token = localStorage.getItem('auth_token');
+                    if (!token) {
+                        window.location.href = '/auth/login?redirect=/subscription/upgrade?tier=${tier}&billing=${billing}';
+                        return;
+                    }
+
+                    // Create payment transaction
+                    const response = await fetch('/api/payment/create', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify({
+                            userId: 1, // TODO: Get from auth
+                            tierId: tier === 'STARTER' ? 2 : (tier === 'PRO' ? 3 : 4),
+                            billingCycle: billing,
+                            paymentMethod: selectedPaymentMethod,
+                            email: document.getElementById('email').value,
+                            fullName: document.getElementById('full-name').value,
+                            phoneNumber: document.getElementById('phone').value
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success && data.transaction.paymentUrl) {
+                        // Redirect to Duitku payment page
+                        window.location.href = data.transaction.paymentUrl;
+                    } else {
+                        alert('Failed to process payment: ' + (data.error || 'Unknown error'));
+                        button.disabled = false;
+                        button.innerHTML = '<i class="fas fa-lock mr-2"></i> Proceed to Payment';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to process payment. Please try again.');
+                    button.disabled = false;
+                    button.innerHTML = '<i class="fas fa-lock mr-2"></i> Proceed to Payment';
+                }
+            });
+
+            // Load payment methods on page load
+            loadPaymentMethods();
+        </script>
+    </body>
+    </html>
+  `);
+});
+
 // Subscription Management Page
 app.get('/subscription', async (c) => {
   return c.html(`
