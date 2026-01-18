@@ -6,6 +6,67 @@
 
 ---
 
+## 🚨 CRITICAL FIX REQUIRED (2026-01-18)
+
+### ⚠️ **ERROR: "Failed to process payment" - SOLUTION READY!**
+
+**Current Issue:**
+- Screenshot shows: "Failed to process payment. Please try again." ❌
+- Root Cause: **D1 Database belum dikonfigurasi di Cloudflare Pages**
+- Impact: Payment gateway tidak berfungsi di production
+
+**✅ SOLUTION (Follow these steps):**
+
+1. **Setup Cloudflare API Key:**
+   ```bash
+   # Panggil tool setup_cloudflare_api_key
+   # ATAU setup manual di Cloudflare Dashboard
+   ```
+
+2. **Create D1 Database:**
+   ```bash
+   cd /home/user/webapp
+   npx wrangler d1 create barber-ai-saas-production
+   # ← COPY database_id dari output!
+   ```
+
+3. **Update wrangler.jsonc** (pakai template: `wrangler.jsonc.template`):
+   ```jsonc
+   "d1_databases": [{
+     "binding": "DB",
+     "database_name": "barber-ai-saas-production",
+     "database_id": "YOUR_DATABASE_ID_HERE"  // ← PASTE database_id
+   }]
+   ```
+
+4. **Apply Database Migration:**
+   ```bash
+   npx wrangler d1 migrations apply barber-ai-saas-production
+   ```
+
+5. **Set Environment Variables:**
+   ```bash
+   ./automated-d1-setup.sh
+   # ATAU manual: npx wrangler pages secret put VARIABLE_NAME --project-name barber-ai-saas
+   ```
+
+6. **Trigger Redeploy:**
+   ```bash
+   git commit --allow-empty -m "feat: configure D1 database binding"
+   git push origin main
+   # Wait 3-5 minutes for deployment
+   ```
+
+7. **Test Payment:**
+   - Visit: https://barber-ai-saas.pages.dev/pricing
+   - Click "Get Started"
+   - Complete payment flow
+   - ✅ Should work perfectly!
+
+**📖 Detailed Guide:** `CRITICAL_FIX_PAYMENT_ERROR_INDONESIA.md`
+
+---
+
 ## 🚀 LATEST UPDATE (2026-01-18)
 
 ### ✅ Auth Loop Fix Complete!
@@ -18,15 +79,16 @@
 
 **Changes Made:**
 - ✅ Added authentication middleware (`src/middleware/auth.ts`)
-- ✅ Protected all `/api/subscription/*` routes with JWT verification
+- ✅ Protected all `/api/subscription/*` dan `/api/payment/*` routes with JWT verification
 - ✅ Standardized token naming from `auth_token` to `sb-access-token`
 - ✅ Added `/auth/session` endpoint for server-side session validation
 - ✅ Updated frontend to use consistent token naming
 - ✅ Fixed redirect logic in subscription UI
+- ✅ Secured payment creation endpoint (userId dari token, bukan request body)
 
 **Deployment Status:**
 - ✅ Code pushed to GitHub: https://github.com/Estes786/barber-ai-saas
-- ⏳ Cloudflare Pages auto-deploy in progress
+- ⏳ **NEXT:** Configure D1 database di Cloudflare (lihat CRITICAL FIX di atas)
 - 🔗 Production URL: https://barber-ai-saas.pages.dev
 
 ---

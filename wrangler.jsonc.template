@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "barber-ai-saas",
+  "compatibility_date": "2026-01-13",
+  "pages_build_output_dir": "./dist",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "barber-ai-saas-production",
+      "database_id": "YOUR_DATABASE_ID_HERE"
+    }
+  ]
+  
+  // INSTRUCTIONS:
+  // 1. Run: npx wrangler d1 create barber-ai-saas-production
+  // 2. Copy the database_id from output
+  // 3. Replace "YOUR_DATABASE_ID_HERE" with actual database_id
+  // 4. Run: npx wrangler d1 migrations apply barber-ai-saas-production
+  // 5. Set environment variables with: npx wrangler pages secret put
+}

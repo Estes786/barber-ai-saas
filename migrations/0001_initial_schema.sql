@@ -1,176 +1,148 @@
--- Barbershops (Multi-tenant base)
-CREATE TABLE IF NOT EXISTS barbershops (
+-- =====================================================
+-- Barber AI SaaS - D1 Database Schema
+-- Payment Integration + Subscription Management
+-- Date: 2026-01-18
+-- =====================================================
+
+-- =====================================================
+-- 1. SUBSCRIPTION TIERS TABLE
+-- =====================================================
+CREATE TABLE IF NOT EXISTS subscription_tiers (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  slug TEXT UNIQUE NOT NULL,
   name TEXT NOT NULL,
-  email TEXT UNIQUE NOT NULL,
-  phone TEXT,
-  address TEXT,
-  description TEXT,
-  logo_url TEXT,
-  cover_url TEXT,
-  subscription_tier TEXT DEFAULT 'FREE' CHECK(subscription_tier IN ('FREE', 'STARTER', 'PROFESSIONAL', 'ENTERPRISE')),
-  subscription_status TEXT DEFAULT 'ACTIVE' CHECK(subscription_status IN ('ACTIVE', 'SUSPENDED', 'CANCELLED')),
-  subscription_end_date DATETIME,
-  ai_tryons_used INTEGER DEFAULT 0,
-  ai_tryons_limit INTEGER DEFAULT 10,
-  custom_domain TEXT,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  display_name TEXT NOT NULL,
+  price_monthly INTEGER NOT NULL,  -- in cents (e.g., 1900 = $19.00)
+  price_yearly INTEGER NOT NULL,   -- in cents
+  features TEXT NOT NULL,           -- JSON array of features
+  limits TEXT NOT NULL,             -- JSON object with limits
+  sort_order INTEGER DEFAULT 0,
+  is_active INTEGER DEFAULT 1,
+  created_at TEXT DEFAULT (datetime('now'))
 );
 
--- Barbers (Staff members of barbershops)
-CREATE TABLE IF NOT EXISTS barbers (
+-- =====================================================
+-- 2. PAYMENT TRANSACTIONS TABLE
+-- =====================================================
+CREATE TABLE IF NOT EXISTS payment_transactions (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  barbershop_id INTEGER NOT NULL,
-  name TEXT NOT NULL,
-  email TEXT UNIQUE NOT NULL,
-  phone TEXT,
-  bio TEXT,
-  photo_url TEXT,
-  specialties TEXT, -- JSON array of specialties
-  years_experience INTEGER,
-  role TEXT DEFAULT 'BARBER' CHECK(role IN ('OWNER', 'ADMIN', 'BARBER')),
-  is_active BOOLEAN DEFAULT 1,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (barbershop_id) REFERENCES barbershops(id) ON DELETE CASCADE
+  transaction_id TEXT UNIQUE NOT NULL,
+  user_id INTEGER NOT NULL,
+  amount INTEGER NOT NULL,          -- in cents
+  currency TEXT DEFAULT 'IDR',
+  payment_method TEXT NOT NULL,
+  payment_url TEXT,
+  status TEXT DEFAULT 'PENDING',    -- PENDING, SUCCESS, FAILED, EXPIRED
+  duitku_reference TEXT,
+  duitku_response TEXT,             -- JSON response from Duitku
+  expires_at TEXT,
+  created_at TEXT DEFAULT (datetime('now')),
+  updated_at TEXT DEFAULT (datetime('now'))
 );
 
--- Clients (Customers who book services)
-CREATE TABLE IF NOT EXISTS clients (
+-- =====================================================
+-- 3. USER SUBSCRIPTIONS TABLE
+-- =====================================================
+CREATE TABLE IF NOT EXISTS user_subscriptions (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  barbershop_id INTEGER NOT NULL,
-  name TEXT NOT NULL,
-  email TEXT,
-  phone TEXT NOT NULL,
-  photo_url TEXT,
-  preferred_barber_id INTEGER,
-  notes TEXT,
-  total_visits INTEGER DEFAULT 0,
-  last_visit_date DATETIME,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (barbershop_id) REFERENCES barbershops(id) ON DELETE CASCADE,
-  FOREIGN KEY (preferred_barber_id) REFERENCES barbers(id) ON DELETE SET NULL
+  user_id INTEGER NOT NULL,
+  tier_id INTEGER NOT NULL,
+  billing_cycle TEXT NOT NULL,      -- MONTHLY, YEARLY
+  status TEXT DEFAULT 'PENDING',    -- PENDING, ACTIVE, CANCELLED, EXPIRED
+  current_period_start TEXT,
+  current_period_end TEXT,
+  cancel_at_period_end INTEGER DEFAULT 0,
+  created_at TEXT DEFAULT (datetime('now')),
+  updated_at TEXT DEFAULT (datetime('now')),
+  FOREIGN KEY (tier_id) REFERENCES subscription_tiers(id)
 );
 
--- Services offered by barbershops
-CREATE TABLE IF NOT EXISTS services (
+-- =====================================================
+-- 4. INVOICES TABLE
+-- =====================================================
+CREATE TABLE IF NOT EXISTS invoices (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  barbershop_id INTEGER NOT NULL,
-  name TEXT NOT NULL,
-  description TEXT,
-  duration_minutes INTEGER NOT NULL,
-  price REAL NOT NULL,
-  is_active BOOLEAN DEFAULT 1,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (barbershop_id) REFERENCES barbershops(id) ON DELETE CASCADE
+  invoice_number TEXT UNIQUE NOT NULL,
+  subscription_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  amount INTEGER NOT NULL,          -- in cents
+  currency TEXT DEFAULT 'IDR',
+  status TEXT DEFAULT 'PENDING',    -- PENDING, PAID, FAILED
+  due_date TEXT,
+  paid_at TEXT,
+  created_at TEXT DEFAULT (datetime('now')),
+  FOREIGN KEY (subscription_id) REFERENCES user_subscriptions(id)
 );
 
--- Bookings/Appointments
-CREATE TABLE IF NOT EXISTS bookings (
+-- =====================================================
+-- 5. PAYMENT WEBHOOK LOGS TABLE
+-- =====================================================
+CREATE TABLE IF NOT EXISTS payment_webhook_logs (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  barbershop_id INTEGER NOT NULL,
-  barber_id INTEGER NOT NULL,
-  client_id INTEGER NOT NULL,
-  service_id INTEGER NOT NULL,
-  booking_date DATE NOT NULL,
-  booking_time TIME NOT NULL,
-  duration_minutes INTEGER NOT NULL,
-  status TEXT DEFAULT 'PENDING' CHECK(status IN ('PENDING', 'CONFIRMED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'NO_SHOW')),
-  notes TEXT,
-  reminder_sent BOOLEAN DEFAULT 0,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (barbershop_id) REFERENCES barbershops(id) ON DELETE CASCADE,
-  FOREIGN KEY (barber_id) REFERENCES barbers(id) ON DELETE CASCADE,
-  FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
-  FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
+  transaction_id TEXT NOT NULL,
+  webhook_data TEXT NOT NULL,       -- JSON dari Duitku
+  processed INTEGER DEFAULT 0,
+  created_at TEXT DEFAULT (datetime('now'))
 );
 
--- Portfolio (Before/After photos)
-CREATE TABLE IF NOT EXISTS portfolio (
+-- =====================================================
+-- 6. SUBSCRIPTION HISTORY TABLE
+-- =====================================================
+CREATE TABLE IF NOT EXISTS subscription_history (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  barbershop_id INTEGER NOT NULL,
-  barber_id INTEGER,
-  title TEXT NOT NULL,
-  description TEXT,
-  before_photo_url TEXT,
-  after_photo_url TEXT,
-  hairstyle_tags TEXT, -- JSON array
-  is_featured BOOLEAN DEFAULT 0,
-  likes_count INTEGER DEFAULT 0,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (barbershop_id) REFERENCES barbershops(id) ON DELETE CASCADE,
-  FOREIGN KEY (barber_id) REFERENCES barbers(id) ON DELETE SET NULL
+  subscription_id INTEGER NOT NULL,
+  action TEXT NOT NULL,             -- CREATED, UPGRADED, DOWNGRADED, CANCELLED
+  old_tier_id INTEGER,
+  new_tier_id INTEGER,
+  reason TEXT,
+  created_at TEXT DEFAULT (datetime('now')),
+  FOREIGN KEY (subscription_id) REFERENCES user_subscriptions(id)
 );
 
--- AI Try-On History
-CREATE TABLE IF NOT EXISTS ai_tryons (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  barbershop_id INTEGER,
-  client_id INTEGER,
-  session_id TEXT NOT NULL,
-  original_photo_url TEXT NOT NULL,
-  result_photo_url TEXT NOT NULL,
-  hairstyle_name TEXT NOT NULL,
-  face_shape TEXT,
-  hair_type TEXT,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (barbershop_id) REFERENCES barbershops(id) ON DELETE SET NULL,
-  FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE SET NULL
-);
+-- =====================================================
+-- 7. INDEXES FOR PERFORMANCE
+-- =====================================================
+CREATE INDEX IF NOT EXISTS idx_payment_transactions_user_id ON payment_transactions(user_id);
+CREATE INDEX IF NOT EXISTS idx_payment_transactions_status ON payment_transactions(status);
+CREATE INDEX IF NOT EXISTS idx_payment_transactions_transaction_id ON payment_transactions(transaction_id);
 
--- AI Consultations
-CREATE TABLE IF NOT EXISTS consultations (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  barbershop_id INTEGER,
-  client_id INTEGER,
-  session_id TEXT NOT NULL,
-  messages TEXT NOT NULL, -- JSON array of chat messages
-  recommendations TEXT, -- JSON array of hairstyle recommendations
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (barbershop_id) REFERENCES barbershops(id) ON DELETE SET NULL,
-  FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE SET NULL
-);
+CREATE INDEX IF NOT EXISTS idx_user_subscriptions_user_id ON user_subscriptions(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_subscriptions_status ON user_subscriptions(status);
+CREATE INDEX IF NOT EXISTS idx_user_subscriptions_tier_id ON user_subscriptions(tier_id);
 
--- Business Hours
-CREATE TABLE IF NOT EXISTS business_hours (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  barbershop_id INTEGER NOT NULL,
-  day_of_week INTEGER NOT NULL CHECK(day_of_week >= 0 AND day_of_week <= 6), -- 0=Sunday, 6=Saturday
-  open_time TIME NOT NULL,
-  close_time TIME NOT NULL,
-  is_closed BOOLEAN DEFAULT 0,
-  FOREIGN KEY (barbershop_id) REFERENCES barbershops(id) ON DELETE CASCADE
-);
+CREATE INDEX IF NOT EXISTS idx_invoices_subscription_id ON invoices(subscription_id);
+CREATE INDEX IF NOT EXISTS idx_invoices_user_id ON invoices(user_id);
+CREATE INDEX IF NOT EXISTS idx_invoices_status ON invoices(status);
 
--- Reviews and Ratings
-CREATE TABLE IF NOT EXISTS reviews (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  barbershop_id INTEGER NOT NULL,
-  barber_id INTEGER,
-  client_id INTEGER NOT NULL,
-  booking_id INTEGER,
-  rating INTEGER NOT NULL CHECK(rating >= 1 AND rating <= 5),
-  comment TEXT,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (barbershop_id) REFERENCES barbershops(id) ON DELETE CASCADE,
-  FOREIGN KEY (barber_id) REFERENCES barbers(id) ON DELETE SET NULL,
-  FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
-  FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE SET NULL
-);
+CREATE INDEX IF NOT EXISTS idx_payment_webhook_logs_transaction_id ON payment_webhook_logs(transaction_id);
+CREATE INDEX IF NOT EXISTS idx_payment_webhook_logs_processed ON payment_webhook_logs(processed);
 
--- Create indexes for performance
-CREATE INDEX IF NOT EXISTS idx_barbers_barbershop ON barbers(barbershop_id);
-CREATE INDEX IF NOT EXISTS idx_clients_barbershop ON clients(barbershop_id);
-CREATE INDEX IF NOT EXISTS idx_bookings_barbershop ON bookings(barbershop_id);
-CREATE INDEX IF NOT EXISTS idx_bookings_barber ON bookings(barber_id);
-CREATE INDEX IF NOT EXISTS idx_bookings_date ON bookings(booking_date);
-CREATE INDEX IF NOT EXISTS idx_services_barbershop ON services(barbershop_id);
-CREATE INDEX IF NOT EXISTS idx_portfolio_barbershop ON portfolio(barbershop_id);
-CREATE INDEX IF NOT EXISTS idx_reviews_barbershop ON reviews(barbershop_id);
-CREATE INDEX IF NOT EXISTS idx_barbershops_slug ON barbershops(slug);
+CREATE INDEX IF NOT EXISTS idx_subscription_history_subscription_id ON subscription_history(subscription_id);
+
+-- =====================================================
+-- 8. INSERT DEFAULT SUBSCRIPTION TIERS
+-- =====================================================
+INSERT OR IGNORE INTO subscription_tiers (id, name, display_name, price_monthly, price_yearly, features, limits, sort_order)
+VALUES 
+  (1, 'FREE', 'Free Trial', 0, 0, 
+   '["5 bookings per month","Basic booking system","Email notifications","Mobile app access","Community support"]', 
+   '{"bookings_per_month":5,"ai_tryon_per_month":3,"barbers":1,"support":"community","analytics":"basic"}', 
+   1),
+  
+  (2, 'STARTER', 'Starter Plan', 1900, 15200, 
+   '["50 bookings per month","AI Virtual Try-On (unlimited)","Email & SMS notifications","Priority email support","Analytics dashboard","Up to 3 barbers"]', 
+   '{"bookings_per_month":50,"ai_tryon_per_month":999,"barbers":3,"support":"email","analytics":"standard"}', 
+   2),
+  
+  (3, 'PRO', 'Pro Plan', 4900, 39200, 
+   '["Unlimited bookings","AI Virtual Try-On (unlimited)","All notifications (Email, SMS, WhatsApp)","24/7 priority support","Advanced analytics","Up to 10 barbers","Custom branding","API access"]', 
+   '{"bookings_per_month":999999,"ai_tryon_per_month":999999,"barbers":10,"support":"24/7","analytics":"advanced","api_access":true}', 
+   3),
+  
+  (4, 'ENTERPRISE', 'Enterprise Plan', 9900, 79200, 
+   '["Unlimited everything","Dedicated account manager","Custom AI models","Full API access","White label solution","SLA guaranteed","Unlimited barbers","Multi-location support","Custom integrations"]', 
+   '{"bookings_per_month":999999,"ai_tryon_per_month":999999,"barbers":999,"support":"dedicated","analytics":"custom","api_access":true,"white_label":true}', 
+   4);
+
+-- =====================================================
+-- END OF MIGRATION
+-- =====================================================
