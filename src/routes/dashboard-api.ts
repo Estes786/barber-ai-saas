@@ -1,9 +1,9 @@
 import { Hono } from 'hono'
-import type { CloudflareBindings } from '../types'
+import type { CloudflareBindings, ContextVariables } from '../types'
 import { createSupabaseClient } from '../lib/supabase'
 import { verifyAuth } from '../lib/auth'
 
-const app = new Hono<{ Bindings: CloudflareBindings }>()
+const app = new Hono<{ Bindings: CloudflareBindings; Variables: ContextVariables }>()
 
 // Middleware: Require authentication for all dashboard routes
 app.use('/*', async (c, next) => {

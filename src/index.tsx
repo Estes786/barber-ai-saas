@@ -19,7 +19,10 @@ const app = new Hono<{ Bindings: CloudflareBindings }>()
 app.use('/api/*', cors())
 
 // Serve static files
-app.use('/static/*', serveStatic({ root: './public' }))
+app.use('/static/*', serveStatic({ 
+  root: './public',
+  manifest: {} // Add empty manifest to satisfy TypeScript
+}))
 
 // Mount Phase 2 API routes (Supabase-powered)
 app.route('/api', apiRoutes)

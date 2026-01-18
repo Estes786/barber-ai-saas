@@ -106,8 +106,8 @@ provide hair care tips, and answer questions about barbering services. Be friend
       throw new Error(`HF API error: ${response.statusText}`)
     }
     
-    const result = await response.json()
-    const aiResponse = Array.isArray(result) ? result[0].generated_text : result.generated_text
+    const result = await response.json() as any
+    const aiResponse = Array.isArray(result) ? (result[0] as any).generated_text : (result as any).generated_text
     
     // Generate suggestions based on conversation
     const suggestions = [

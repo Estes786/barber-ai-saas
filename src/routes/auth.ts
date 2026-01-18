@@ -140,7 +140,7 @@ auth.post('/login', async (c) => {
 auth.post('/logout', async (c) => {
   try {
     const authResult = await requireAuth(
-      c.req.header('Authorization'),
+      c.req.header('Authorization') || null,
       c.env
     )
 
@@ -163,7 +163,7 @@ auth.post('/logout', async (c) => {
 auth.get('/me', async (c) => {
   try {
     const authResult = await requireAuth(
-      c.req.header('Authorization'),
+      c.req.header('Authorization') || null,
       c.env
     )
 
@@ -206,9 +206,9 @@ auth.post('/refresh', async (c) => {
 
     return c.json({ 
       success: true,
-      access_token: data.session.access_token,
-      refresh_token: data.session.refresh_token,
-      expires_in: data.session.expires_in
+      access_token: data.session?.access_token,
+      refresh_token: data.session?.refresh_token,
+      expires_in: data.session?.expires_in
     })
 
   } catch (error) {
@@ -251,7 +251,7 @@ auth.post('/reset-password', async (c) => {
 auth.put('/update-password', async (c) => {
   try {
     const authResult = await requireAuth(
-      c.req.header('Authorization'),
+      c.req.header('Authorization') || null,
       c.env
     )
 
@@ -286,7 +286,7 @@ auth.put('/update-password', async (c) => {
 auth.get('/session', async (c) => {
   try {
     const authResult = await requireAuth(
-      c.req.header('Authorization'),
+      c.req.header('Authorization') || null,
       c.env
     )
 

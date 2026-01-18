@@ -13,6 +13,11 @@ export interface CloudflareBindings {
   HUGGINGFACE_API_KEY: string;
 }
 
+// Context Variables Type
+export interface ContextVariables {
+  user: AuthUser;
+}
+
 // Database Models
 export interface Barbershop {
   id: number;

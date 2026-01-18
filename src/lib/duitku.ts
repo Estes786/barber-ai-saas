@@ -106,7 +106,7 @@ export class Duitku {
       throw new Error(`Duitku API Error: ${response.status} ${response.statusText}`);
     }
 
-    const result: DuitkuCreateTransactionResponse = await response.json();
+    const result = await response.json() as DuitkuCreateTransactionResponse;
     
     if (result.statusCode !== '00') {
       throw new Error(`Duitku Transaction Failed: ${result.statusMessage}`);

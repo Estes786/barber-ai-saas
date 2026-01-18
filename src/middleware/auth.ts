@@ -2,15 +2,16 @@ import { Context, Next } from 'hono'
 import { requireAuth } from '../lib/auth'
 import type { SupabaseEnv } from '../lib/supabase'
 import type { UserRole } from '../lib/auth'
+import type { ContextVariables } from '../types'
 
 /**
  * Authentication Middleware
  * Protects routes by requiring valid JWT token
  */
-export async function authMiddleware(c: Context<{ Bindings: SupabaseEnv }>, next: Next) {
+export async function authMiddleware(c: Context<{ Bindings: SupabaseEnv; Variables: ContextVariables }>, next: Next) {
   const authHeader = c.req.header('Authorization')
   
-  const result = await requireAuth(authHeader, c.env)
+  const result = await requireAuth(authHeader || null, c.env)
   
   if (!result.success) {
     return c.json(
@@ -24,7 +25,7 @@ export async function authMiddleware(c: Context<{ Bindings: SupabaseEnv }>, next
   }
   
   // Attach user to context for use in route handlers
-  c.set('user', result.user)
+  c.set('user', result.user!)
   
   await next()
 }
@@ -34,10 +35,10 @@ export async function authMiddleware(c: Context<{ Bindings: SupabaseEnv }>, next
  * Protects routes by requiring specific user roles
  */
 export function requireRole(...allowedRoles: UserRole[]) {
-  return async (c: Context<{ Bindings: SupabaseEnv }>, next: Next) => {
+  return async (c: Context<{ Bindings: SupabaseEnv; Variables: ContextVariables }>, next: Next) => {
     const authHeader = c.req.header('Authorization')
     
-    const result = await requireAuth(authHeader, c.env, allowedRoles)
+    const result = await requireAuth(authHeader || null, c.env, allowedRoles)
     
     if (!result.success) {
       return c.json(
@@ -51,7 +52,7 @@ export function requireRole(...allowedRoles: UserRole[]) {
     }
     
     // Attach user to context
-    c.set('user', result.user)
+    c.set('user', result.user!)
     
     await next()
   }
