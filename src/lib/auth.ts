@@ -2,7 +2,7 @@
 import { createSupabaseClient } from './supabase'
 import type { SupabaseEnv } from './supabase'
 
-export type UserRole = 'owner' | 'barber' | 'client'
+export type UserRole = 'OWNER' | 'BARBER' | 'CLIENT'
 
 export interface AuthUser {
   id: string
