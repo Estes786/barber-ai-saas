@@ -1,7 +1,11 @@
 import { Hono } from 'hono';
 import type { CloudflareBindings, UserSubscription, UsageTracking } from '../types';
+import { authMiddleware } from '../middleware/auth';
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
+
+// Apply authentication middleware to all subscription routes
+app.use('/*', authMiddleware);
 
 /**
  * GET /api/subscription/current

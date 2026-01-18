@@ -172,8 +172,8 @@ app.get('/subscription/upgrade', async (c) => {
                 button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
 
                 try {
-                    // Get user info from localStorage or form
-                    const token = localStorage.getItem('auth_token');
+                    // Get user info from localStorage or form (using Supabase token)
+                    const token = localStorage.getItem('sb-access-token');
                     if (!token) {
                         window.location.href = '/auth/login?redirect=/subscription/upgrade?tier=${tier}&billing=${billing}';
                         return;
@@ -614,10 +614,32 @@ app.get('/subscription', async (c) => {
                 window.location.href = '/pricing';
             }
 
-            // Check if user is authenticated
-            const token = localStorage.getItem('auth_token');
+            // Check if user is authenticated using server-side session verification
+            const token = localStorage.getItem('sb-access-token');
             if (!token) {
                 window.location.href = '/auth/login?redirect=/subscription';
+            } else {
+                // Verify session with backend
+                fetch('/auth/session', {
+                    headers: {
+                        'Authorization': \`Bearer \${token}\`
+                    }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.authenticated || !data.session) {
+                        // Token invalid or expired, clear and redirect to login
+                        localStorage.removeItem('sb-access-token');
+                        localStorage.removeItem('sb-refresh-token');
+                        window.location.href = '/auth/login?redirect=/subscription';
+                    }
+                    // Session valid, page can load normally
+                })
+                .catch(err => {
+                    console.error('Session verification failed:', err);
+                    // On error, redirect to login
+                    window.location.href = '/auth/login?redirect=/subscription';
+                });
             }
         </script>
     </body>

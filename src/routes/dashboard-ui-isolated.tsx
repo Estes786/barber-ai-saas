@@ -202,7 +202,7 @@ app.get('/dashboard/owner', (c) => {
 
         <script>
           // Auth check
-          const token = localStorage.getItem('token');
+          const token = localStorage.getItem('sb-access-token');
           const user = JSON.parse(localStorage.getItem('user') || '{}');
           
           if (!token || user.role !== 'owner') {
@@ -494,7 +494,7 @@ app.get('/dashboard/barber', (c) => {
 
         <script>
           // Auth check
-          const token = localStorage.getItem('token');
+          const token = localStorage.getItem('sb-access-token');
           const user = JSON.parse(localStorage.getItem('user') || '{}');
           
           if (!token || user.role !== 'barber') {
@@ -831,7 +831,7 @@ app.get('/dashboard/client', (c) => {
 
         <script>
           // Auth check
-          const token = localStorage.getItem('token');
+          const token = localStorage.getItem('sb-access-token');
           const user = JSON.parse(localStorage.getItem('user') || '{}');
           
           if (!token || user.role !== 'client') {

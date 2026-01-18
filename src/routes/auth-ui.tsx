@@ -163,10 +163,9 @@ authUI.get('/login', (c) => {
               const data = await response.json();
 
               if (data.success) {
-                // Save token to localStorage (consistent key naming)
-                localStorage.setItem('token', data.access_token);
-                localStorage.setItem('access_token', data.access_token);
-                localStorage.setItem('refresh_token', data.refresh_token);
+                // Save tokens using Supabase naming convention
+                localStorage.setItem('sb-access-token', data.access_token);
+                localStorage.setItem('sb-refresh-token', data.refresh_token);
                 localStorage.setItem('user', JSON.stringify(data.user));
 
                 // Role-based redirect - ISOLATED DASHBOARDS

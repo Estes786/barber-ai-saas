@@ -110,7 +110,7 @@ app.get('/dashboard', (c) => {
 
         <script>
           // Check authentication
-          const token = localStorage.getItem('token');
+          const token = localStorage.getItem('sb-access-token');
           if (!token) {
             window.location.href = '/auth/login';
           }
@@ -121,7 +121,8 @@ app.get('/dashboard', (c) => {
 
           // Logout handler
           document.getElementById('logout-btn').addEventListener('click', async () => {
-            localStorage.removeItem('token');
+            localStorage.removeItem('sb-access-token');
+            localStorage.removeItem('sb-refresh-token');
             localStorage.removeItem('user');
             window.location.href = '/auth/login';
           });
@@ -455,7 +456,7 @@ app.get('/dashboard/bookings', (c) => {
         </div>
 
         <script>
-          const token = localStorage.getItem('token');
+          const token = localStorage.getItem('sb-access-token');
           if (!token) window.location.href = '/auth/login';
 
           const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -714,7 +715,7 @@ app.get('/dashboard/clients', (c) => {
         </div>
 
         <script>
-          const token = localStorage.getItem('token');
+          const token = localStorage.getItem('sb-access-token');
           if (!token) window.location.href = '/auth/login';
 
           const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -1002,7 +1003,7 @@ app.get('/dashboard/portfolio', (c) => {
         </div>
 
         <script>
-          const token = localStorage.getItem('token');
+          const token = localStorage.getItem('sb-access-token');
           if (!token) window.location.href = '/auth/login';
 
           const user = JSON.parse(localStorage.getItem('user') || '{}');

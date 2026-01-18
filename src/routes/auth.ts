@@ -282,4 +282,38 @@ auth.put('/update-password', async (c) => {
   }
 })
 
+// GET /auth/session - Check if user session is valid (lightweight check)
+auth.get('/session', async (c) => {
+  try {
+    const authResult = await requireAuth(
+      c.req.header('Authorization'),
+      c.env
+    )
+
+    if (!authResult.success) {
+      return c.json({ 
+        success: false, 
+        session: null,
+        authenticated: false 
+      })
+    }
+
+    return c.json({ 
+      success: true,
+      session: {
+        user: authResult.user
+      },
+      authenticated: true
+    })
+
+  } catch (error) {
+    console.error('Session check error:', error)
+    return c.json({ 
+      success: false, 
+      session: null,
+      authenticated: false 
+    })
+  }
+})
+
 export default auth

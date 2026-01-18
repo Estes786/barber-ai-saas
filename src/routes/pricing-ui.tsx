@@ -525,8 +525,8 @@ app.get('/pricing', async (c) => {
                 const billing = isYearly ? 'YEARLY' : 'MONTHLY';
                 const finalPrice = isYearly ? Math.round(price * 0.8 * 12) : price;
                 
-                // Check if user is logged in
-                const token = localStorage.getItem('auth_token');
+                // Check if user is logged in (using Supabase token naming)
+                const token = localStorage.getItem('sb-access-token');
                 
                 if (!token) {
                     // Redirect to register with plan selection
