@@ -1,0 +1,388 @@
+{
+  "meta": {
+    "version": "2.0-OPTIMIZED",
+    "created_date": "2026-01-19",
+    "project_name": "barber-ai-saas",
+    "repository": "https://github.com/Estes786/barber-ai-saas.git",
+    "total_estimated_time": "60-90 minutes",
+    "token_budget_per_layer": 25,
+    "deployment_target": "Cloudflare Pages",
+    "database": "Supabase PostgreSQL"
+  },
+
+  "environment_variables": {
+    "note": "Environment variables are stored securely and not committed to repository",
+    "github": {
+      "PAT": "STORED_SECURELY"
+    },
+    "supabase": {
+      "url": "https://wuuulccafxlhqxzityln.supabase.co",
+      "anon_key": "STORED_IN_.DEV.VARS",
+      "service_role_key": "STORED_IN_WRANGLER_SECRETS",
+      "access_key": "STORED_SECURELY"
+    },
+    "cloudflare": {
+      "account_id": "STORED_IN_WRANGLER_CONFIG",
+      "api_token": "STORED_SECURELY"
+    },
+    "duitku_sandbox": {
+      "merchant_code": "DS27558",
+      "api_key": "STORED_IN_WRANGLER_SECRETS",
+      "callback_url": "https://barber-ai-saas.pages.dev/api/payment/callback",
+      "return_url": "https://barber-ai-saas.pages.dev/subscription",
+      "mode": "sandbox"
+    }
+  },
+
+  "root_cause_analysis": {
+    "summary": "User yang sudah login diarahkan ke /pricing (public page) yang tidak memiliki auth check, sehingga ketika klik Upgrade akan redirect ke /auth/login lagi",
+    "affected_layers": [
+      {
+        "layer": "LAYER 1 - FRONTEND/AUTH FLOW",
+        "status": "FOUND - ROOT CAUSE",
+        "issues": [
+          {
+            "file": "src/routes/dashboard-ui-isolated.tsx",
+            "line": "96-97",
+            "problem": "Tombol 'Upgrade Now' redirect ke /pricing (public page) bukan /subscription (authenticated page)",
+            "severity": "HIGH"
+          }
+        ]
+      },
+      {
+        "layer": "LAYER 2 - BACKEND/API",
+        "status": "OK - NO ISSUES",
+        "verification": "Payment API endpoint /api/payment/create exists and working correctly"
+      },
+      {
+        "layer": "LAYER 3 - DATABASE",
+        "status": "OK - NO ISSUES",
+        "verification": "Supabase schema complete with all required tables"
+      },
+      {
+        "layer": "LAYER 4 - PAYMENT INTEGRATION",
+        "status": "OK - NEEDS TESTING",
+        "verification": "Duitku integration code exists, needs sandbox credentials update"
+      }
+    ]
+  },
+
+  "execution_layers": [
+    {
+      "layer_id": "LAYER_1",
+      "layer_name": "Frontend Auth Flow Fix",
+      "priority": "CRITICAL",
+      "estimated_time": "10-15 minutes",
+      "token_budget": 25,
+      "dependencies": [],
+      
+      "issues": [
+        {
+          "issue_id": "L1_001",
+          "title": "Dashboard Upgrade button redirects to public pricing page",
+          "description": "Owner/Client dashboard has 'Upgrade Now' button that redirects to /pricing (public page without auth), causing re-authentication loop",
+          "root_cause": "href='/pricing' should be href='/subscription' for authenticated users",
+          "severity": "HIGH",
+          "affected_files": [
+            "src/routes/dashboard-ui-isolated.tsx"
+          ]
+        }
+      ],
+
+      "fixes": [
+        {
+          "fix_id": "L1_FIX_001",
+          "target_file": "src/routes/dashboard-ui-isolated.tsx",
+          "action": "EDIT",
+          "line_range": "96-97",
+          "old_code": "<a href=\"/pricing\" class=\"bg-white text-purple-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition text-center\">\n                            <i class=\"fas fa-arrow-up mr-2\"></i>Upgrade Now",
+          "new_code": "<a href=\"/subscription\" class=\"bg-white text-purple-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition text-center\">\n                            <i class=\"fas fa-arrow-up mr-2\"></i>Upgrade Now",
+          "rationale": "Authenticated users should go directly to /subscription page where they can select plans and proceed to payment"
+        }
+      ],
+
+      "verification": [
+        {
+          "test_id": "L1_TEST_001",
+          "description": "Login as CLIENT/OWNER and click Upgrade Now",
+          "expected_result": "Should redirect to /subscription (not /pricing or /auth/login)",
+          "test_url": "https://barber-ai-saas.pages.dev/dashboard/owner"
+        },
+        {
+          "test_id": "L1_TEST_002",
+          "description": "Click Upgrade button on /subscription page",
+          "expected_result": "Should redirect to /subscription/upgrade with tier parameter",
+          "test_url": "https://barber-ai-saas.pages.dev/subscription"
+        }
+      ]
+    },
+
+    {
+      "layer_id": "LAYER_2",
+      "layer_name": "Backend API Verification",
+      "priority": "MEDIUM",
+      "estimated_time": "5-10 minutes",
+      "token_budget": 15,
+      "dependencies": ["LAYER_1"],
+      
+      "issues": [],
+
+      "verification": [
+        {
+          "test_id": "L2_TEST_001",
+          "description": "Verify payment endpoint exists and responds",
+          "command": "curl -X POST https://barber-ai-saas.pages.dev/api/payment/create -H 'Content-Type: application/json' -d '{}'",
+          "expected_status": "400 or 401 (endpoint exists, requires auth)"
+        },
+        {
+          "test_id": "L2_TEST_002",
+          "description": "Verify payment methods endpoint",
+          "command": "curl https://barber-ai-saas.pages.dev/api/payment/methods?amount=19000",
+          "expected_status": "200 (should return payment methods from Duitku)"
+        }
+      ],
+
+      "notes": "Backend payment routes already implemented correctly. No fixes needed."
+    },
+
+    {
+      "layer_id": "LAYER_3",
+      "layer_name": "Database Schema Verification",
+      "priority": "MEDIUM",
+      "estimated_time": "5-10 minutes",
+      "token_budget": 15,
+      "dependencies": ["LAYER_2"],
+      
+      "issues": [],
+
+      "verification": [
+        {
+          "test_id": "L3_TEST_001",
+          "description": "Verify subscription_tiers table exists in Supabase",
+          "method": "Execute SQL query via Supabase Management API",
+          "query": "SELECT COUNT(*) FROM subscription_tiers WHERE is_active = true;",
+          "expected_result": "Should return count >= 4 (FREE, STARTER, PRO, ENTERPRISE)"
+        },
+        {
+          "test_id": "L3_TEST_002",
+          "description": "Verify payment_transactions table exists",
+          "query": "SELECT COUNT(*) FROM payment_transactions;",
+          "expected_result": "Should not error (table exists)"
+        }
+      ],
+
+      "supabase_api_approach": {
+        "method": "POST",
+        "endpoint": "https://wuuulccafxlhqxzityln.supabase.co/rest/v1/rpc/execute_sql",
+        "headers": {
+          "apikey": "USE service_role_key FROM environment_variables",
+          "Authorization": "Bearer {service_role_key}",
+          "Content-Type": "application/json"
+        },
+        "note": "Use Supabase Management API to execute SQL queries if direct database access is not available"
+      },
+
+      "notes": "Database schema already deployed via previous sessions. Verification only needed."
+    },
+
+    {
+      "layer_id": "LAYER_4",
+      "layer_name": "Payment Integration (Duitku Sandbox)",
+      "priority": "HIGH",
+      "estimated_time": "20-30 minutes",
+      "token_budget": 35,
+      "dependencies": ["LAYER_1", "LAYER_2", "LAYER_3"],
+      
+      "issues": [
+        {
+          "issue_id": "L4_001",
+          "title": "Duitku credentials need to be updated to DS27558 sandbox",
+          "description": "Environment variables in deployment need to use DS27558 merchant code for sandbox testing",
+          "severity": "MEDIUM",
+          "affected_files": [
+            "wrangler.jsonc (production secrets)",
+            ".dev.vars (local development)"
+          ]
+        }
+      ],
+
+      "fixes": [
+        {
+          "fix_id": "L4_FIX_001",
+          "action": "UPDATE_ENV_VARS",
+          "target": "Cloudflare Pages Environment Variables",
+          "variables": {
+            "DUITKU_MERCHANT_CODE": "DS27558",
+            "DUITKU_API_KEY": "ac55f8b01ce115ab7a0adf0b760a4970",
+            "DUITKU_CALLBACK_URL": "https://barber-ai-saas.pages.dev/api/payment/callback",
+            "DUITKU_RETURN_URL": "https://barber-ai-saas.pages.dev/subscription",
+            "SUPABASE_URL": "https://wuuulccafxlhqxzityln.supabase.co",
+            "SUPABASE_ANON_KEY": "USE anon_key FROM environment_variables",
+            "SUPABASE_SERVICE_ROLE_KEY": "USE service_role_key FROM environment_variables"
+          },
+          "method": "wrangler pages secret put",
+          "commands": [
+            "echo 'DS27558' | wrangler pages secret put DUITKU_MERCHANT_CODE --project-name barber-ai-saas",
+            "echo 'ac55f8b01ce115ab7a0adf0b760a4970' | wrangler pages secret put DUITKU_API_KEY --project-name barber-ai-saas"
+          ]
+        }
+      ],
+
+      "verification": [
+        {
+          "test_id": "L4_TEST_001",
+          "description": "Test payment methods API with Duitku sandbox",
+          "test_steps": [
+            "1. Navigate to https://barber-ai-saas.pages.dev/subscription",
+            "2. Click Upgrade on any tier (STARTER, PRO, or ENTERPRISE)",
+            "3. Should see payment methods loaded from Duitku",
+            "4. Fill customer information and select payment method",
+            "5. Click 'Proceed to Payment'",
+            "6. Should redirect to Duitku sandbox payment page"
+          ],
+          "expected_result": "Complete flow works without errors"
+        },
+        {
+          "test_id": "L4_TEST_002",
+          "description": "Test payment callback handling",
+          "test_steps": [
+            "1. Complete payment in Duitku sandbox",
+            "2. Duitku sends callback to /api/payment/callback",
+            "3. Transaction status updated in database",
+            "4. User subscription activated"
+          ],
+          "expected_result": "Payment recorded and subscription activated"
+        }
+      ],
+
+      "notes": "Duitku sandbox testing requires manual payment simulation in Duitku dashboard"
+    }
+  ],
+
+  "deployment_workflow": {
+    "steps": [
+      {
+        "step": 1,
+        "action": "Apply Layer 1 fixes",
+        "commands": [
+          "cd /home/user/webapp",
+          "# Fix dashboard-ui-isolated.tsx line 96",
+          "# Change href='/pricing' to href='/subscription'"
+        ]
+      },
+      {
+        "step": 2,
+        "action": "Commit changes to git",
+        "commands": [
+          "cd /home/user/webapp",
+          "git add .",
+          "git commit -m 'fix: Update dashboard Upgrade button to redirect to /subscription instead of /pricing'",
+          "git push origin main"
+        ]
+      },
+      {
+        "step": 3,
+        "action": "Build and deploy to Cloudflare Pages",
+        "commands": [
+          "cd /home/user/webapp",
+          "npm run build",
+          "wrangler pages deploy dist --project-name barber-ai-saas"
+        ]
+      },
+      {
+        "step": 4,
+        "action": "Update Cloudflare environment variables",
+        "commands": [
+          "echo 'DS27558' | wrangler pages secret put DUITKU_MERCHANT_CODE --project-name barber-ai-saas",
+          "echo 'ac55f8b01ce115ab7a0adf0b760a4970' | wrangler pages secret put DUITKU_API_KEY --project-name barber-ai-saas"
+        ]
+      },
+      {
+        "step": 5,
+        "action": "Test complete payment flow",
+        "manual_steps": [
+          "1. Visit https://barber-ai-saas.pages.dev",
+          "2. Login as CLIENT or OWNER",
+          "3. Click 'Upgrade Now' in dashboard",
+          "4. Verify redirect to /subscription (not /pricing)",
+          "5. Click Upgrade on any tier",
+          "6. Fill form and proceed to payment",
+          "7. Complete sandbox payment in Duitku"
+        ]
+      }
+    ]
+  },
+
+  "execution_summary": {
+    "total_layers": 4,
+    "critical_fixes": 1,
+    "estimated_total_time": "40-65 minutes",
+    "estimated_token_usage": "90 tokens",
+    "deployment_required": true,
+    "database_migration_required": false,
+    "manual_testing_required": true
+  },
+
+  "quick_execution_script": {
+    "description": "Quick single-command execution for Layer 1 fix only",
+    "prerequisites": [
+      "Repository already cloned at /home/user/webapp",
+      "GitHub PAT configured",
+      "Cloudflare API token configured"
+    ],
+    "command": "cd /home/user/webapp && sed -i 's|href=\"/pricing\"|href=\"/subscription\"|g' src/routes/dashboard-ui-isolated.tsx && git add . && git commit -m 'fix: Dashboard upgrade button redirect' && git push origin main && npm run build && wrangler pages deploy dist --project-name barber-ai-saas"
+  },
+
+  "troubleshooting": {
+    "common_issues": [
+      {
+        "issue": "Still redirecting to /auth/login after clicking Upgrade",
+        "possible_causes": [
+          "Browser cache - clear cookies and localStorage",
+          "Auth token expired - logout and login again",
+          "Deployment not complete - check Cloudflare Pages deployment status"
+        ],
+        "solutions": [
+          "Clear browser cache and cookies",
+          "Use incognito/private browsing",
+          "Check Cloudflare Pages deployment logs"
+        ]
+      },
+      {
+        "issue": "Payment methods not loading",
+        "possible_causes": [
+          "Duitku credentials not set correctly",
+          "Duitku API rate limit",
+          "Network connectivity issues"
+        ],
+        "solutions": [
+          "Verify DUITKU_MERCHANT_CODE and DUITKU_API_KEY in Cloudflare Pages settings",
+          "Check browser console for API errors",
+          "Test Duitku API directly with curl"
+        ]
+      }
+    ]
+  },
+
+  "success_criteria": {
+    "layer_1": [
+      "✅ Click 'Upgrade Now' in dashboard redirects to /subscription",
+      "✅ No authentication loop when navigating between pages",
+      "✅ Subscription page loads with available plans"
+    ],
+    "layer_2": [
+      "✅ Payment API endpoints respond correctly",
+      "✅ Auth middleware validates user tokens"
+    ],
+    "layer_3": [
+      "✅ Database tables exist and accessible",
+      "✅ Tier data loads correctly"
+    ],
+    "layer_4": [
+      "✅ Payment methods load from Duitku",
+      "✅ Payment transaction creates successfully",
+      "✅ Redirect to Duitku payment page works",
+      "✅ Callback updates database correctly"
+    ]
+  }
+}

@@ -93,7 +93,7 @@ app.get('/dashboard/owner', (c) => {
                         </div>
                     </div>
                     <div class="flex flex-col space-y-2">
-                        <a href="/pricing" class="bg-white text-purple-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition text-center">
+                        <a href="/subscription" class="bg-white text-purple-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition text-center">
                             <i class="fas fa-arrow-up mr-2"></i>Upgrade Now
                         </a>
                         <a href="/subscription" class="border-2 border-white text-white px-6 py-2 rounded-full font-semibold hover:bg-white hover:text-purple-600 transition text-center text-sm">
