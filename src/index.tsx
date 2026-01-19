@@ -11,6 +11,7 @@ import paymentRoutes from './routes/payment'
 import subscriptionRoutes from './routes/subscription'
 import pricingUIRoutes from './routes/pricing-ui'
 import subscriptionUIRoutes from './routes/subscription-ui'
+import dashboardSubscriptionUIRoutes from './routes/dashboard-subscription-ui'
 import bossDashboardUIRoutes from './routes/boss-dashboard-ui'
 
 const app = new Hono<{ Bindings: CloudflareBindings }>()
@@ -50,6 +51,9 @@ app.route('/', pricingUIRoutes)
 
 // Mount Phase 3.3 Subscription UI routes (Pages)
 app.route('/', subscriptionUIRoutes)
+
+// Mount Dashboard Subscription UI routes (Pages) - authenticated only
+app.route('/', dashboardSubscriptionUIRoutes)
 
 // Mount L4 Boss Dashboard UI routes (Pages)
 app.route('/', bossDashboardUIRoutes)
