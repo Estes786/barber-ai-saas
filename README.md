@@ -8,21 +8,28 @@
 
 ## 🎉 LATEST DEPLOYMENT SUCCESS (2026-01-19)
 
-### ✅ **Authentication Loop FIXED & Deployed to Production!**
+### ✅ **LAYER 1 AUTH FLOW FIX - DEPLOYED!**
 
 **What Was Fixed:**
-- ✅ Users no longer redirected to login when authenticated
-- ✅ "View Plans" and "Manage Subscription" buttons work correctly
-- ✅ Token naming standardized to `sb-access-token`
-- ✅ Server-side session verification implemented
-- ✅ Auth middleware protecting all subscription routes
+- ✅ **ROOT CAUSE:** Dashboard "Upgrade Now" buttons redirected to `/pricing` (public page) instead of `/subscription` (authenticated page)
+- ✅ **FIX APPLIED:** Updated all dashboard upgrade links to redirect to `/subscription`
+- ✅ **LOCATIONS FIXED:**
+  - Owner Dashboard (line 96) - Already correct ✓
+  - Barber Dashboard (line 349) - Fixed from `/pricing` → `/subscription`
+  - Client Dashboard (line 644) - Fixed from `/pricing` → `/subscription`
+- ✅ **ENVIRONMENT VARIABLES:** All Cloudflare secrets configured
+  - SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
+  - DUITKU_MERCHANT_CODE (DS27558), DUITKU_API_KEY
+  - DUITKU_CALLBACK_URL, DUITKU_RETURN_URL
+- ✅ **DEPLOYMENT:** Built and deployed successfully to Cloudflare Pages
 
 **Production URLs:**
-- **Latest:** https://ff93e1e9.barber-ai-saas.pages.dev
+- **Latest:** https://83d5d599.barber-ai-saas.pages.dev
 - **Main:** https://barber-ai-saas.pages.dev
 - **GitHub:** https://github.com/Estes786/barber-ai-saas
 
-**Deployment Date:** 2026-01-19 02:43 GMT  
+**Deployment Date:** 2026-01-19 11:21 GMT  
+**Git Commit:** ff896f5 - "fix: Redirect authenticated users from dashboard to /subscription instead of /pricing"  
 **Status:** ✅ LIVE IN PRODUCTION
 
 📖 **Full Details:** See [DEPLOYMENT_SUCCESS_LAYER3_FIX.md](./DEPLOYMENT_SUCCESS_LAYER3_FIX.md)
