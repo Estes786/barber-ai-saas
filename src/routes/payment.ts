@@ -50,7 +50,7 @@ app.get('/methods', async (c) => {
       c.env.DUITKU_API_KEY,
       c.env.DUITKU_CALLBACK_URL,
       c.env.DUITKU_RETURN_URL,
-      false // production mode
+      true // SANDBOX mode - using DS27558 credentials
     );
 
     const methods = await duitku.getPaymentMethods(amount);
@@ -114,7 +114,7 @@ app.post('/create', authMiddleware, async (c) => {
       c.env.DUITKU_API_KEY,
       c.env.DUITKU_CALLBACK_URL,
       c.env.DUITKU_RETURN_URL,
-      false // production mode
+      true // SANDBOX mode - using DS27558 credentials
     );
 
     const productDetails = `${tier.display_name} - ${billingCycle === 'YEARLY' ? 'Yearly' : 'Monthly'} Subscription`;
@@ -261,7 +261,7 @@ app.post('/callback', async (c) => {
       c.env.DUITKU_API_KEY,
       c.env.DUITKU_CALLBACK_URL,
       c.env.DUITKU_RETURN_URL,
-      false
+      true // SANDBOX mode
     );
 
     const isValid = await duitku.verifyCallbackSignature(
