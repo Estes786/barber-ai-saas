@@ -316,9 +316,9 @@ app.get('/subscription', async (c) => {
                     </div>
 
                     <div class="flex space-x-4">
-                        <a href="/pricing" class="flex-1 bg-white text-purple-600 py-3 rounded-xl font-bold hover:bg-gray-100 transition text-center">
-                            <i class="fas fa-arrow-up mr-2"></i>Upgrade Plan
-                        </a>
+                        <button onclick="window.location.href='/subscription'" class="flex-1 bg-white text-purple-600 py-3 rounded-xl font-bold hover:bg-gray-100 transition text-center">
+                            <i class="fas fa-arrow-up mr-2"></i>View Available Plans
+                        </button>
                         <button class="bg-red-500 bg-opacity-20 border-2 border-red-300 text-white px-6 py-3 rounded-xl font-semibold hover:bg-red-500 transition">
                             <i class="fas fa-times-circle mr-2"></i>Cancel Plan
                         </button>
@@ -605,7 +605,7 @@ app.get('/subscription', async (c) => {
         </div>
 
         <script>
-            async function upgradeToPlan(planName, price) {
+            function upgradeToPlan(planName, price) {
                 // Get authentication token
                 const token = localStorage.getItem('sb-access-token');
                 
@@ -615,64 +615,9 @@ app.get('/subscription', async (c) => {
                     return;
                 }
                 
-                // Show loading state
-                const button = event.target;
-                const originalText = button.innerHTML;
-                button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
-                button.disabled = true;
-                
-                try {
-                    // Get user data to get email and name
-                    const userResponse = await fetch('/auth/me', {
-                        headers: {
-                            'Authorization': 'Bearer ' + token
-                        }
-                    });
-                    
-                    if (!userResponse.ok) {
-                        throw new Error('Failed to get user data');
-                    }
-                    
-                    const userData = await userResponse.json();
-                    const user = userData.user;
-                    
-                    // Create payment transaction
-                    const response = await fetch('/api/payment/create', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Bearer ' + token
-                        },
-                        body: JSON.stringify({
-                            tierId: planName,
-                            billingCycle: 'MONTHLY',
-                            paymentMethod: 'BC', // Bank Transfer (default, user can choose later)
-                            email: user.email,
-                            fullName: user.name || user.email,
-                            phoneNumber: user.phone || '081234567890'
-                        })
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (result.success && result.transaction.paymentUrl) {
-                        // Store transaction reference
-                        localStorage.setItem('pendingTransaction', JSON.stringify(result.transaction));
-                        
-                        // Redirect to Duitku payment page
-                        window.location.href = result.transaction.paymentUrl;
-                    } else {
-                        throw new Error(result.error || 'Failed to create payment transaction');
-                    }
-                    
-                } catch (error) {
-                    console.error('Upgrade error:', error);
-                    alert('Failed to initiate payment: ' + error.message + '. Please try again or contact support.');
-                    
-                    // Restore button
-                    button.innerHTML = originalText;
-                    button.disabled = false;
-                }
+                // Redirect to upgrade page with tier and billing cycle
+                // This allows user to select payment method properly
+                window.location.href = '/subscription/upgrade?tier=' + planName + '&billing=MONTHLY';
             }
 
             // Check if user is authenticated using server-side session verification
